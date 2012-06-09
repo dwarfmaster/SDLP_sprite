@@ -1,0 +1,12 @@
+prefix=/home/luc
+exec_prefix=${prefix}
+libdir=${exec_prefix}/libs
+includedir=${prefix}/includes
+
+Name: SDLP_sprite
+Description: Sprite end animation library for Simple DirectMedia Layer
+Version: 0.1
+Requires: sdl >= 1.2.10
+Libs: -L${libdir} -lSDLP_sprite
+Cflags: -I${includedir} -std=gnu++0x
+

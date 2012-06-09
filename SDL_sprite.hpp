@@ -1,0 +1,4 @@
+#ifndef DEF_SDLP_SPRITE_HPP
+#define DEF_SDLP_SPRITE_HPP
+
+#endif//DEF_SDLP_SPRITE_HPP

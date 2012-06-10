@@ -7,6 +7,6 @@ Name: SDLP_sprite
 Description: Sprite end animation library for Simple DirectMedia Layer
 Version: 0.1
 Requires: sdl >= 1.2.10 SDLP_position >= 1.0 SDLP_tools >= 0.1
-Libs: -L${libdir} -lSDLP_sprite
+Libs: -L${libdir} -lSDLP_sprite -ltinyxml
 Cflags: -I${includedir} -std=gnu++0x
 

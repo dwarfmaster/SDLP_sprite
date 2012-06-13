@@ -7,6 +7,9 @@
 #include <limits>
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <tinyxml.h>
+#include <SDL/SDL_image.h>
 
 #include <SDLP_position.hpp>
 #include <SDLP_tools.hpp>
@@ -57,6 +60,8 @@ namespace sdl
 			Pointsi m_hotPoint;
 
 			boost::shared_ptr<SDL_Surface> m_img;
+
+			void parseGAABB(TiXmlElement* gaabb);
 	};
 };
 

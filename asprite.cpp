@@ -24,8 +24,52 @@ namespace sdl
 
 	bool ASprite::load(ASprite::path_t path)
 	{
-		// À compléter
-		return false;
+		TiXmlDocument file(path.string());
+		if(!file.LoadFile())
+			return false;
+
+		// On récupère le node image
+		TiXmlElement* elem = file.FirstChildElement("image");
+		if(elem == NULL )
+			return false;
+
+		// On récupère le chemin vers l'image
+		std::string img(elem->Attribute("path"));
+		if(img.empty()
+				|| !boost::filesystem::exists(img))
+			return false;
+
+		// On charge l'image
+		SDL_Surface* tmp = IMG_Load(img.c_str());
+		if(tmp == NULL)
+			return false;
+		Liberator lib;
+		m_img.reset(tmp, lib);
+
+		// On récupère le node hotpoint
+		elem = file.FirstChildElement("hotpoint");
+		if(elem == NULL) 
+			return false;
+
+		// On en récupère la position
+		std::string str(elem->Attribute("x"));
+		if(str.empty())
+			return false;
+		m_hotPoint.x = sdl::atoi(str);
+		str = elem->Attribute("y");
+		if(str.empty())
+			return false;
+		m_hotPoint.y = sdl::atoi(str);
+
+		// On récupère les SAABBs
+		elem = file.FirstChildElement("gaabb");
+		while(elem)
+		{
+			this->parseGAABB(elem);
+			elem = elem->NextSiblingElement("gaabb");
+		}
+
+		return true;
 	}
 
 	void ASprite::clear()
@@ -38,6 +82,7 @@ namespace sdl
 	ASprite& ASprite::operator=(const ASprite& cp)
 	{
 		this->set(cp);
+		return *this;
 	}
 
 	ASprite::operator SDL_Surface() const
@@ -129,6 +174,55 @@ namespace sdl
 		}
 
 		return col;
+	}
+
+	void ASprite::parseGAABB(TiXmlElement* gaabb)
+	{
+		GAABB group;
+		std::string name;
+
+		name = gaabb->Attribute("id");
+		if(name.empty()
+				|| this->exist(name) )
+			return;
+
+		std::string str = gaabb->Attribute("priority");
+		if(str.empty())
+			return;
+		group.priority = sdl::atoi(str);
+
+		TiXmlElement* child = gaabb->FirstChildElement("saabb");
+		while(child)
+		{
+			SDL_Rect saabb;
+
+			str = child->Attribute("x");
+			if(str.empty())
+				break;
+			saabb.x = atoi(str);
+			str = child->Attribute("y");
+			if(str.empty())
+				break;
+			saabb.y = atoi(str);
+			str = child->Attribute("w");
+			if(str.empty())
+				break;
+			saabb.w = atoi(str);
+			str = child->Attribute("h");
+			if(str.empty())
+				break;
+			saabb.h = atoi(str);
+
+			group.aabbs.push_back(saabb);
+
+			child = child->NextSiblingElement("saabb");
+		}
+
+		if(group.aabbs.empty())
+			return;
+
+		group.global.englobe(group.aabbs);
+		m_groups[name]=group;
 	}
 };
 

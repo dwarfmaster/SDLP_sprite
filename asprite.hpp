@@ -16,10 +16,14 @@
 
 namespace sdl
 {
+
+	class SpriteEditor;
+
 	class ASprite
 	{
 		public:
 			typedef boost::filesystem::path path_t;
+			friend SpriteEditor;
 
 			ASprite();
 			ASprite(path_t path); // charge un fichier .sprite

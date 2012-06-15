@@ -173,7 +173,10 @@ namespace sdl
 				for(size_t j=0; j<i->second.aabbs.size(); ++j)
 					if(i->second.aabbs[j].contain(p)
 							&& i->second.priority < high)
+					{
 						col = i->first;
+						high = i->second.priority;
+					}
 		}
 
 		return col;

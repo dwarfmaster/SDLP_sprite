@@ -1,6 +1,8 @@
 #ifndef DEF_SDLP_SPRITEEDIT
 #define DEF_SDLP_SPRITEEDIT
 
+#include <boost/filesystem/fstream.hpp>
+
 #include "asprite.hpp"
 
 namespace sdl
@@ -36,7 +38,7 @@ namespace sdl
 			bool addSAABB(const AABB& saabb);
 
 			ASprite tmpSprite() const; // Retourne la Sprite en construction : non utilisable mais permet d'avoir des infos
-			ASprite* operator->() const; // Idem, permet un accès plus rapide
+			ASprite* operator->(); // Idem, permet un accès plus rapide
 
 			bool save(const ASprite::path_t& path) const;
 			ASprite create() const;

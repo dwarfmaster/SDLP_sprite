@@ -153,7 +153,10 @@ namespace sdl
 			if(i->second.global.contain(p))
 				for(size_t j=0; j<i->second.aabbs.size(); ++j)
 					if(i->second.aabbs[j].contain(p))
+					{
 						cols.push_back(i->first);
+						break;
+					}
 		}
 
 		return cols;

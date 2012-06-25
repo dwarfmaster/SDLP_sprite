@@ -199,6 +199,16 @@ namespace sdl
 		return true;
 	}
 
+	Pointsi SpriteEditor::hotpoint() const
+	{
+		return m_edit.m_hotPoint;
+	}
+
+	ASprite::path_t SpriteEditor::getPath() const
+	{
+		return m_path;
+	}
+
 	ASprite SpriteEditor::tmpSprite() const
 	{
 		return m_edit;

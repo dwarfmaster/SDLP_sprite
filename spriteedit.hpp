@@ -45,6 +45,8 @@ namespace sdl
 			void setHotPoint(const Pointsi& hp);
 			bool addGroup(std::string gr);
 			bool addSAABB(const AABB& saabb);
+			Pointsi hotpoint() const;
+			ASprite::path_t getPath() const;
 
 			ASprite tmpSprite() const; // Retourne la Sprite en construction : non utilisable mais permet d'avoir des infos
 			ASprite* operator->(); // Idem, permet un accès plus rapide

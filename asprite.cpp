@@ -20,6 +20,7 @@ namespace sdl
 		m_groups = cp.m_groups;
 		m_hotPoint = cp.m_hotPoint;
 		m_img = cp.m_img;
+		m_imgPath = cp.m_imgPath;
 	}
 
 	bool ASprite::load(ASprite::path_t path)

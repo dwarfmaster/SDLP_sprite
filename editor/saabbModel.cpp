@@ -15,9 +15,24 @@ sdl::SpriteEditor* SaabbModel::getEditor() const
 
 std::string SaabbModel::getElementAt(int i)
 {
+	sdl::AABB aabb=m_editor->SAABBS()[i];
+	std::string str("");
+
+	str+= sdl::itoa(i);
+	str+=". (";
+	str+= sdl::itoa(aabb.rect().x);
+	str+= ";";
+	str+= sdl::itoa(aabb.rect().y);
+	str+= ") - ";
+	str+= sdl::itoa(aabb.rect().w);
+	str+= "x";
+	str+= sdl::itoa(aabb.rect().h);
+
+	return str;
 }
 
-int SaabbModel::getNumberOfElements();
+int SaabbModel::getNumberOfElements()
 {
+	return m_editor->nbSAABBS();
 }
 

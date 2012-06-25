@@ -3,6 +3,8 @@
 
 #include <guichan.hpp>
 #include <SDLP_sprite.hpp>
+#include <SDLP_position.hpp>
+#include <SDLP_tools.hpp>
 
 class SaabbModel : public gcn::ListModel
 {

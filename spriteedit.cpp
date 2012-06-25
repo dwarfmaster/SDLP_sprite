@@ -53,6 +53,16 @@ namespace sdl
 		return *this;
 	}
 
+	std::vector<std::string> SpriteEditor::groups() const
+	{
+		return m_edit.groups();
+	}
+
+	size_t SpriteEditor::nbGroups() const
+	{
+		return m_edit.groups().size();
+	}
+
 	bool SpriteEditor::setCurrent(std::string cur, size_t idx)
 	{
 		if(!m_edit.exist(cur))
@@ -62,8 +72,18 @@ namespace sdl
 		if(m_edit[m_current].size() <= idx)
 			return false;
 		m_idxCur = idx;
-		
+
 		return true;
+	}
+
+	std::string SpriteEditor::current() const
+	{
+		return m_current;
+	}
+
+	size_t SpriteEditor::currentIdx() const
+	{
+		return m_idxCur;
 	}
 
 	bool SpriteEditor::setPriority(int newp)
@@ -112,6 +132,19 @@ namespace sdl
 
 		m_edit[str][idx]=nvalue;
 		return true;
+	}
+
+	size_t SpriteEditor::nbSAABBS() const
+	{
+		return this->SAABBS().size();
+	}
+
+	std::vector<AABB> SpriteEditor::SAABBS() const
+	{
+		if(m_current!="")
+			return m_edit[m_current];
+		else
+			return std::vector<AABB>(0);
 	}
 
 	AABB& SpriteEditor::operator[](size_t idx)
@@ -182,7 +215,7 @@ namespace sdl
 			return false;
 
 		file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\n";
-		
+
 		if(m_path.empty())
 			return false;
 		file << "<image path=\"" << m_path.string() << "\" />\n";

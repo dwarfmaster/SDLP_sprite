@@ -23,12 +23,21 @@ namespace sdl
 			SpriteEditor& operator=(const SpriteEditor& cp);
 			SpriteEditor& operator=(const ASprite& sprite);
 
+			std::vector<std::string> groups() const;
+			size_t nbGroups() const;
+
 			bool setCurrent(std::string cur, size_t idx=0);
+			std::string current() const;
+			size_t currentIdx() const;
+
 			bool setPriority(int newp);
 			saabbs_it SAABBbegin();
 			saabbs_it SAABBend();
 			bool modifie(const AABB& nvalue); // Modifie la SAABB courante
 			bool modifie(std::string str, size_t idx, const AABB& nvalue); // En modifie une précisément
+			size_t nbSAABBS() const;
+			std::vector<AABB> SAABBS() const;
+
 			AABB& operator[](size_t idx); // Stoppe le programme en cas d'erreur d'index : à utiliser avec précaution
 			std::vector<AABB>& operator[](std::string str); // Idem
 

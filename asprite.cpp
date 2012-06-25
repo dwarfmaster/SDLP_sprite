@@ -34,7 +34,8 @@ namespace sdl
 			return false;
 
 		// On récupère le chemin vers l'image
-		std::string img(elem->Attribute("path"));
+		m_imgPath = elem->Attribute("path");
+		std::string img = m_imgPath.string();
 		if(img.empty()
 				|| !boost::filesystem::exists(img))
 			return false;

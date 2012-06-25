@@ -64,6 +64,7 @@ namespace sdl
 			Pointsi m_hotPoint;
 
 			boost::shared_ptr<SDL_Surface> m_img;
+			path_t m_imgPath; // Variable interne pour SpriteEditor
 
 			void parseGAABB(TiXmlElement* gaabb);
 	};

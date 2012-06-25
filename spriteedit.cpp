@@ -30,6 +30,7 @@ namespace sdl
 	{
 		this->clear();
 		m_edit = sprite;
+		m_path = sprite.m_imgPath;
 		return *this;
 	}
 
@@ -247,6 +248,7 @@ namespace sdl
 			sprite.m_groups[groups[i]].global.englobe(sprite.m_groups[groups[i]].aabbs);
 
 		sprite.m_hotPoint = m_edit.m_hotPoint;
+		sprite.m_imgPath = m_path;
 
 		if( !m_path.empty()
 				&& boost::filesystem::exists(m_path) 

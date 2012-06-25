@@ -15,11 +15,11 @@ sdl::SpriteEditor* GroupModel::getEditor() const
 
 int GroupModel::getNumberOfElements()
 {
-	return (*m_editor)->groups().size();
+	return m_editor->nbGroups();
 }
 
 std::string GroupModel::getElementAt(int i)
 {
-	return (*m_editor)->groups()[i];
+	return m_editor->groups()[i];
 }
 

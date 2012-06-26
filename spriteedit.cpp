@@ -97,6 +97,23 @@ namespace sdl
 		return this->deleteGroup(m_current);
 	}
 
+	AABB SpriteEditor::get() const
+	{
+		if( !m_edit.exist(m_current)
+				|| m_idxCur >= m_edit[m_current].size() )
+			return sdl::AABB( sdl::makeRect(0, 0, 0, 0) );
+		else
+			return getGroup()[m_idxCur];
+	}
+
+	std::vector<AABB> SpriteEditor::getGroup() const
+	{
+		if(m_edit.exist(m_current))
+			return m_edit[m_current];
+		std::vector<AABB> vec;
+		return vec;
+	}
+
 	bool SpriteEditor::setPriority(int newp)
 	{
 		if(!m_edit.exist(m_current))
@@ -128,7 +145,7 @@ namespace sdl
 	bool SpriteEditor::modifie(const AABB& nvalue)
 	{
 		if( !m_edit.exist(m_current)
-				|| m_idxCur <= m_edit[m_current].size() )
+				|| m_idxCur >= m_edit[m_current].size() )
 			return false;
 
 		m_edit[m_current][m_idxCur]=nvalue;
@@ -138,7 +155,7 @@ namespace sdl
 	bool SpriteEditor::modifie(std::string str, size_t idx, const AABB& nvalue)
 	{
 		if( !m_edit.exist(str)
-				|| m_idxCur <= m_edit[str].size() )
+				|| m_idxCur >= m_edit[str].size() )
 			return false;
 
 		m_edit[str][idx]=nvalue;
@@ -161,7 +178,7 @@ namespace sdl
 	AABB& SpriteEditor::operator[](size_t idx)
 	{
 		if( !m_edit.exist(m_current)
-				|| m_idxCur <= m_edit[m_current].size() )
+				|| idx >= m_edit[m_current].size() )
 		{
 			std::cerr<<"Erreur d'index dans SpriteEditor."<<std::endl;
 			exit(EXIT_FAILURE);

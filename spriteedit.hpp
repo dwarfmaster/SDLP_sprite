@@ -31,6 +31,8 @@ namespace sdl
 			size_t currentIdx() const;
 			bool deleteCurrent(); // supprime la SAABB courante
 			bool deleteCurrentGroup();
+			AABB get() const;
+			std::vector<AABB> getGroup() const;
 
 			bool setPriority(int newp);
 			saabbs_it SAABBbegin();

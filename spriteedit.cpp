@@ -148,7 +148,7 @@ namespace sdl
 				|| m_idxCur >= m_edit[m_current].size() )
 			return false;
 
-		m_edit[m_current][m_idxCur]=nvalue;
+		modifie(m_current, m_idxCur, nvalue);
 		return true;
 	}
 
@@ -158,7 +158,7 @@ namespace sdl
 				|| m_idxCur >= m_edit[str].size() )
 			return false;
 
-		m_edit[str][idx]=nvalue;
+		m_edit.m_groups[str].aabbs[idx]=nvalue;
 		return true;
 	}
 

@@ -29,6 +29,8 @@ namespace sdl
 			bool setCurrent(std::string cur, size_t idx=0);
 			std::string current() const;
 			size_t currentIdx() const;
+			bool deleteCurrent(); // supprime la SAABB courante
+			bool deleteCurrentGroup();
 
 			bool setPriority(int newp);
 			saabbs_it SAABBbegin();
@@ -44,7 +46,9 @@ namespace sdl
 			void setPath(const ASprite::path_t& path);
 			void setHotPoint(const Pointsi& hp);
 			bool addGroup(std::string gr);
+			bool deleteGroup(std::string str);
 			bool addSAABB(const AABB& saabb);
+			bool deleteSAABB(size_t idx);
 			Pointsi hotpoint() const;
 			ASprite::path_t getPath() const;
 

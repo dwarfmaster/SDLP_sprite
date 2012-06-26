@@ -87,6 +87,16 @@ namespace sdl
 		return m_idxCur;
 	}
 
+	bool SpriteEditor::deleteCurrent()
+	{
+		return this->deleteSAABB(m_idxCur);
+	}
+
+	bool SpriteEditor::deleteCurrentGroup()
+	{
+		return this->deleteGroup(m_current);
+	}
+
 	bool SpriteEditor::setPriority(int newp)
 	{
 		if(!m_edit.exist(m_current))
@@ -191,11 +201,30 @@ namespace sdl
 		return true;
 	}
 
+	bool SpriteEditor::deleteGroup(std::string str)
+	{
+		if(!m_edit.exist(str))
+			return false;
+
+		m_edit.m_groups.erase(str);
+		return true;
+	}
+
 	bool SpriteEditor::addSAABB(const AABB& saabb)
 	{
 		if(!m_edit.exist(m_current))
 			return false;
 		m_edit.m_groups[m_current].aabbs.push_back(saabb);
+		return true;
+	}
+
+	bool SpriteEditor::deleteSAABB(size_t idx)
+	{
+		if( !m_edit.exist(m_current)
+			|| idx >= m_edit.m_groups[m_current].aabbs.size() )
+			return false;
+
+		m_edit.m_groups[m_current].aabbs.erase( m_edit.m_groups[m_current].aabbs.begin() + idx );
 		return true;
 	}
 

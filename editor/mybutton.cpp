@@ -31,6 +31,7 @@ bool MyButton::pressed() const
 	return this->isPressed();
 }
 
+/*
 void MyButton::mouseReleased(gcn::MouseEvent& event)
 {
 	Button::mouseReleased(event);
@@ -65,3 +66,4 @@ void MyButton::focusLost(const gcn::Event& event)
 {
 	Button::focusLost(event);
 }
+//*/

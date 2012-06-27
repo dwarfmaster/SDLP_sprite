@@ -11,6 +11,7 @@ class GroupModel : public gcn::ListModel
 		GroupModel(const GroupModel& cp);
 
 		sdl::SpriteEditor* getEditor() const;
+		int nbGroup(std::string group);
 
 		virtual int getNumberOfElements();
 		virtual std::string getElementAt(int i);

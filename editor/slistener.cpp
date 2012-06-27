@@ -17,7 +17,7 @@ void SListener::valueChanged(const gcn::SelectionEvent& event)
 		gcn::ListBox* ori = dynamic_cast<gcn::ListBox*>(event.getSource());
 		int idx = ori->getSelected();
 		std::string str = ori->getListModel()->getElementAt(idx);
-		m_callback(idx, str, *ori);
+		m_callback(idx, str, ori);
 	}
 
 	SelectionListener::valueChanged(event);

@@ -26,6 +26,11 @@ void EditorArea::mouseClicked(gcn::MouseEvent& event)
 			topleft = sdl::min(pos, pos2);
 			bottomright = sdl::max(pos, pos2);
 
+			if(bottomright.x - topleft.x < 4)
+				bottomright.x = topleft.x + 4;
+			if(bottomright.y - topleft.y < 4)
+				bottomright.y = topleft.y + 4;
+
 			aabb.set(topleft, bottomright);
 			m_editor->modifie(aabb);
 			break;
@@ -34,6 +39,11 @@ void EditorArea::mouseClicked(gcn::MouseEvent& event)
 			pos2 = m_editor->get().location(sdl::AABB::TOP_LEFT);
 			topleft = sdl::min(pos, pos2);
 			bottomright = sdl::max(pos, pos2);
+
+			if(bottomright.x - topleft.x < 4)
+				bottomright.x = topleft.x + 4;
+			if(bottomright.y - topleft.y < 4)
+				bottomright.y = topleft.y + 4;
 
 			aabb.set(topleft, bottomright);
 			m_editor->modifie(aabb);

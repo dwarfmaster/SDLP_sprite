@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 		edit.load(path);
 
 		edit.loop();
-		// edit.free();
+		edit.free();
 	}
 	catch(gcn::Exception e)
 	{

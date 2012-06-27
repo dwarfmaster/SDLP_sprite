@@ -1,7 +1,7 @@
 #include "editor.hpp"
 
 	Editor::Editor()
-: m_U(NULL), m_space(NULL),
+: m_U(NULL), m_space(NULL), m_icon(NULL),
 	ecran(NULL), m_input(NULL), m_graph(NULL), m_loader(NULL),
 	m_gui(NULL), m_top(NULL), m_font(NULL),
 	m_savedsurf(NULL), m_usedsurf(NULL), m_image(NULL), m_img(NULL), m_scroll(NULL), m_save(NULL),
@@ -43,9 +43,16 @@ void Editor::load(path_t path)
 	if( SDL_Init(SDL_INIT_VIDEO) < 0 )
 		throw std::string("Erreur au chargement de la lib SDL.");
 
+	SDL_WM_SetIcon(m_icon, NULL);
+	SDL_WM_SetCaption("SDLP_Sprite Editor", NULL);
+
 	ecran = SDL_SetVideoMode(800, 600, 24, SDL_HWSURFACE | SDL_DOUBLEBUF); // SDL_RESIZABLE
 	if( ecran == NULL )
 		throw std::string("Erreur à l'ouverture de la fenêtre.");
+
+	m_icon = IMG_Load("./icon.png");
+	if(m_icon == NULL)
+		throw std::string("Erreur au chargement de l'icone.");
 
 	SDL_Rect msize = maxSizeScreen();
 	SDL_EnableUNICODE(1);
@@ -114,6 +121,7 @@ void Editor::load(path_t path)
 	m_deleteSaabb->setClicCallback(boost::bind(&Editor::deleteSAABB, this));
 
 	calculatePos(sdl::makeRect(0, 0, ecran->w, ecran->h));
+	colors();
 
 	m_top->add(m_scroll);
 	m_top->add(m_save);
@@ -172,10 +180,47 @@ void Editor::calculatePos(SDL_Rect nsize)
 	m_scroll->setDimension(gcn::Rectangle(152, 2, x, nsize.h-4));
 }
 
+void Editor::colors()
+{
+	// gcn::Color bs(125, 125, 125);
+	gcn::Color bs(100, 100, 0);
+	gcn::Color bg(0, 0, 0);
+	gcn::Color fg(150, 100, 0);
+	gcn::Color sl(255, 165, 0);
+
+	setColor(m_save, bs, bg, fg, sl);
+	setColor(m_scroll, bs, bg, fg, sl);
+	setColor(m_img, bs, bg, fg, sl);
+	setColor(m_scrollGroups, bs, bg, fg, sl);
+	setColor(m_groups, bs, bg, fg, sl);
+	setColor(m_addGroup, bs, bg, fg, sl);
+	setColor(m_deleteGroup, bs, bg, fg, sl);
+	setColor(m_nameNGroup, bs, bg, fg, sl);
+	setColor(m_showAll, bs, bg, fg, sl);
+	setColor(m_hotX, bs, bg, fg, sl);
+	setColor(m_hotY, bs, bg, fg, sl);
+	setColor(m_hotP, bs, bg, fg, sl);
+	setColor(m_scrollSaabb, bs, bg, fg, sl);
+	setColor(m_saabbs, bs, bg, fg, sl);
+	setColor(m_addSaabb, bs, bg, fg, sl);
+	setColor(m_deleteSaabb, bs, bg, fg, sl);
+
+	bs = gcn::Color(150, 100, 0);
+	setColor(m_top, bs, bg, fg, sl);
+}
+
 void Editor::free()
 {
+	delete m_U;
+	delete m_space;
+
+	SDL_FreeSurface(m_savedsurf);
+	SDL_FreeSurface(m_usedsurf);
+	SDL_FreeSurface(m_icon);
+
 	delete m_save;
 	delete m_scroll;
+	delete m_image;
 	delete m_img;
 
 	delete m_scrollGroups;
@@ -184,6 +229,8 @@ void Editor::free()
 	delete m_groupListener;
 	delete m_addGroup;
 	delete m_deleteGroup;
+	delete m_nameNGroup;
+	delete m_showAll;
 
 	delete m_hotX;
 	delete m_hotY;
@@ -267,13 +314,16 @@ void Editor::drawSAABBS()
 
 	if(m_showAll->isSelected())
 	{
-		gcn::Color c(0, 0, 255);
+		gcn::Color c(255, 165, 0);
 		std::vector<std::string> groups = m_editor->groups();
 		for(size_t i=0; i<groups.size(); ++i)
 		{
-			std::vector<sdl::AABB> saabbs = (*m_editor)[groups[i]];
-			for(size_t j=0; j<saabbs.size(); ++j)
-				drawAABB(saabbs[j], &c);
+			if(groups[i] != m_editor->current())
+			{
+				std::vector<sdl::AABB> saabbs = (*m_editor)[groups[i]];
+				for(size_t j=0; j<saabbs.size(); ++j)
+					drawAABB(saabbs[j], &c);
+			}
 		}
 	}
 
@@ -286,7 +336,7 @@ void Editor::drawSAABBS()
 	drawHotPoint(m_editor->hotpoint());
 }
 
-void Editor::drawAABB(const sdl::AABB& aabb, gcn::Color* c)
+void Editor::drawAABB(sdl::AABB aabb, gcn::Color* c)
 {
 	gcn::Color col;
 	if(c == NULL)
@@ -294,26 +344,29 @@ void Editor::drawAABB(const sdl::AABB& aabb, gcn::Color* c)
 	else
 		col = *c;
 
-	for(int x = aabb->x; x < aabb->x + aabb->w; ++x)
+	for(size_t i=0; i<2; ++i)
 	{
-		putPixel(x, aabb->y, &col);
-		putPixel(x, aabb->y + aabb->h, &col);
-	}
+		for(int x = aabb->x; x < aabb->x + aabb->w; ++x)
+		{
+			putPixel(x, aabb->y, &col);
+			putPixel(x, aabb->y + aabb->h, &col);
+		}
 
-	for(int y = aabb->y; y < aabb->y + aabb->h; ++y)
-	{
-		putPixel(aabb->x, y, &col);
-		putPixel(aabb->x + aabb->w, y, &col);
+		for(int y = aabb->y; y < aabb->y + aabb->h; ++y)
+		{
+			putPixel(aabb->x, y, &col);
+			putPixel(aabb->x + aabb->w, y, &col);
+		}
+
+		aabb->x-=1;
+		aabb->y-=1;
+		aabb->w+=2;
+		aabb->h+=2;
 	}
 }
 
 void Editor::drawPrincAABB(sdl::AABB aabb, gcn::Color* c)
 {
-	drawAABB(aabb, c);
-	aabb->x-=1;
-	aabb->y-=1;
-	aabb->w+=2;
-	aabb->h+=2;
 	drawAABB(aabb, c);
 	aabb->x+=2;
 	aabb->y+=2;
@@ -372,6 +425,9 @@ void Editor::addGroup()
 void Editor::deleteGroup()
 {
 	int i = m_groups->getSelected();
+	if(i < 0)
+		return;
+
 	m_editor->deleteCurrentGroup();
 	m_groups->setSelected(i);
 }
@@ -388,6 +444,9 @@ void Editor::addSAABB()
 void Editor::deleteSAABB()
 {
 	int i = m_saabbs->getSelected();
+	if(i < 0)
+		return;
+
 	m_editor->deleteCurrent();
 	m_saabbs->setSelected(i);
 }
@@ -403,6 +462,12 @@ void Editor::hotPoint()
 
 void Editor::putPixel(int x, int y, gcn::Color* c)
 {
+	if( x >= m_usedsurf->w
+			|| x < 0 
+			|| y >= m_usedsurf->h
+			|| y < 0 )
+		return;
+
 	int bpp = m_usedsurf->format->BytesPerPixel;
 	/* Here p is the address to the pixel we want to set */
 	Uint8 *p = (Uint8 *)m_usedsurf->pixels + y * m_usedsurf->pitch + x * bpp;
@@ -450,6 +515,14 @@ SDL_Rect Editor::maxSizeScreen() const
 		return sdl::makeRect(0, 0, 1600, 900);
 	else
 		return *modes[0];
+}
+
+void Editor::setColor(gcn::Widget* wid, const gcn::Color& bs, const gcn::Color& bg, const gcn::Color& fg, const gcn::Color& sl)
+{
+	wid->setBaseColor(bs);
+	wid->setBackgroundColor(bg);
+	wid->setForegroundColor(fg);
+	wid->setSelectionColor(sl);
 }
 
 

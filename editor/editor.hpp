@@ -34,6 +34,7 @@ class Editor
 
 	protected:
 		void calculatePos(SDL_Rect nsize); // Calcule la position des Widgets
+		void colors(); // Colore les widgets
 
 		// Basic functions
 		bool save();
@@ -41,7 +42,7 @@ class Editor
 		void changeIdx(int idx);
 		void hotPoint();
 		void drawSAABBS();
-		void drawAABB(const sdl::AABB& aabb, gcn::Color* c=NULL); // Dessine une aabb
+		void drawAABB(sdl::AABB aabb, gcn::Color* c=NULL); // Dessine une aabb
 		void drawPrincAABB(sdl::AABB aabb, gcn::Color* c=NULL); // Dessine l'aabb en édition
 		void drawHotPoint(const sdl::Pointsi& pos); // Dessine l'hotpoint
 
@@ -56,11 +57,13 @@ class Editor
 		void loadImage(path_t path);
 		void putPixel(int x, int y, gcn::Color* c=NULL);
 		SDL_Rect maxSizeScreen() const;
+		void setColor(gcn::Widget* wid, const gcn::Color& bs, const gcn::Color& bg, const gcn::Color& fg, const gcn::Color& sl);
 
 		// General Elements
 		path_t m_firstPath;
 		sdl::AnEvent* m_U;
 		sdl::AnEvent* m_space;
+		SDL_Surface* m_icon;
 
 		// Obligatory Elements
 		SDL_Surface* ecran;

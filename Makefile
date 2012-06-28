@@ -1,4 +1,4 @@
-OBJS=asprite.o spriteedit.o
+OBJS=asprite.o spriteedit.o anim.o
 NAME=SDLP_sprite
 
 CXXFLAGS=-Wall -Wextra `sdl-config --cflags` `pkg-config --cflags SDLP_position SDLP_tools SDL_image` -fPIC -fsigned-bitfields -std=gnu++0x -g

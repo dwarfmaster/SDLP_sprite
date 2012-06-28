@@ -6,7 +6,8 @@
 	m_gui(NULL), m_top(NULL), m_font(NULL),
 	m_savedsurf(NULL), m_usedsurf(NULL), m_image(NULL), m_img(NULL), m_scroll(NULL), m_save(NULL),
 	m_groups(NULL), m_groupModel(NULL), m_groupListener(NULL), m_scrollGroups(NULL),
-	m_nameNGroup(NULL), m_addGroup(NULL), m_deleteGroup(NULL), m_showAll(NULL),
+	m_nameNGroup(NULL), m_addGroup(NULL), m_deleteGroup(NULL), 
+	m_priority(NULL), m_showAll(NULL),
 	m_hotX(NULL), m_hotY(NULL), m_hotP(NULL),
 	m_saabbs(NULL), m_saabbModel(NULL), m_saabbListener(NULL), m_scrollSaabb(NULL),
 	m_addSaabb(NULL), m_deleteSaabb(NULL)
@@ -100,6 +101,8 @@ void Editor::load(path_t path)
 	m_addGroup->setClicCallback(boost::bind(&Editor::addGroup, this));
 	m_deleteGroup = new MyButton("Delete");
 	m_deleteGroup->setClicCallback(boost::bind(&Editor::deleteGroup, this));
+
+	m_priority = new gcn::TextField;
 	m_showAll = new gcn::CheckBox("Show all", false);
 
 	m_hotX = new gcn::TextField( sdl::itoa(m_editor->hotpoint().x) );
@@ -129,6 +132,7 @@ void Editor::load(path_t path)
 	m_top->add(m_nameNGroup);
 	m_top->add(m_addGroup);
 	m_top->add(m_deleteGroup);
+	m_top->add(m_priority);
 	m_top->add(m_showAll);
 	m_top->add(m_hotX);
 	m_top->add(m_hotY);
@@ -151,6 +155,8 @@ void Editor::calculatePos(SDL_Rect nsize)
 
 	y -= m_showAll->getHeight() + 20;
 	m_showAll->setPosition(0, y);
+	y -= m_font->getHeight() + 6;
+	m_priority->setDimension( gcn::Rectangle(0, y, 150, m_font->getHeight() + 4) );
 	y -= m_addGroup->getHeight() + 6;
 	m_addGroup->setSpacing(2);
 	m_addGroup->setPosition(150 - m_addGroup->getWidth() - 4, y);
@@ -196,6 +202,7 @@ void Editor::colors()
 	setColor(m_addGroup, bs, bg, fg, sl);
 	setColor(m_deleteGroup, bs, bg, fg, sl);
 	setColor(m_nameNGroup, bs, bg, fg, sl);
+	setColor(m_priority, bs, bg, fg, sl);
 	setColor(m_showAll, bs, bg, fg, sl);
 	setColor(m_hotX, bs, bg, fg, sl);
 	setColor(m_hotY, bs, bg, fg, sl);
@@ -230,6 +237,8 @@ void Editor::free()
 	delete m_addGroup;
 	delete m_deleteGroup;
 	delete m_nameNGroup;
+
+	delete m_priority;
 	delete m_showAll;
 
 	delete m_hotX;
@@ -303,6 +312,7 @@ void Editor::loadImage(path_t path)
 
 bool Editor::save()
 {
+	m_editor->setPriority( sdl::atoi(m_priority->getText()) );
 	path_t path = boost::filesystem::change_extension(m_firstPath, ".sprite");
 	m_editor->save(path);
 	return true;
@@ -390,6 +400,8 @@ void Editor::drawHotPoint(const sdl::Pointsi& pos)
 
 void Editor::changeGroup(std::string name)
 {
+	m_editor->setPriority( sdl::atoi(m_priority->getText()) );
+
 	int i = m_saabbs->getSelected();
 	m_editor->setCurrent(name);
 
@@ -400,7 +412,9 @@ void Editor::changeGroup(std::string name)
 		m_saabbs->setSelected( 0 );
 	else
 		m_saabbs->setSelected( i );
+
 	m_saabbs->adjustSize();
+	m_priority->setText( sdl::itoa(m_editor->getPriority()) );
 	drawSAABBS();
 }
 
@@ -525,4 +539,7 @@ void Editor::setColor(gcn::Widget* wid, const gcn::Color& bs, const gcn::Color& 
 	wid->setSelectionColor(sl);
 }
 
+void Editor::changeP()
+{
+}
 

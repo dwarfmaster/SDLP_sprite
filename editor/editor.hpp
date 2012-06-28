@@ -45,6 +45,7 @@ class Editor
 		void drawAABB(sdl::AABB aabb, gcn::Color* c=NULL); // Dessine une aabb
 		void drawPrincAABB(sdl::AABB aabb, gcn::Color* c=NULL); // Dessine l'aabb en édition
 		void drawHotPoint(const sdl::Pointsi& pos); // Dessine l'hotpoint
+		void changeP();
 
 		void addGroup();
 		void deleteGroup();
@@ -90,6 +91,8 @@ class Editor
 		gcn::TextField* m_nameNGroup;
 		MyButton* m_addGroup;
 		MyButton* m_deleteGroup;
+
+		gcn::TextField* m_priority;
 		gcn::CheckBox* m_showAll;
 
 		gcn::TextField* m_hotX;

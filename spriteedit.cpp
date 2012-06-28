@@ -23,6 +23,7 @@ namespace sdl
 		m_current = cp.m_current;
 		m_idxCur = cp.m_idxCur;
 		m_path = cp.m_path;
+		m_rect = cp.m_rect;
 		return *this;
 	}
 
@@ -31,6 +32,7 @@ namespace sdl
 		this->clear();
 		m_edit = sprite;
 		m_path = sprite.m_imgPath;
+		m_rect = sprite.m_rect;
 		return *this;
 	}
 
@@ -39,6 +41,7 @@ namespace sdl
 		m_current = "";
 		m_idxCur = 0;
 		m_path = "";
+		m_rect = makeRect(0, 0, 0, 0);
 		return *this;
 	}
 
@@ -283,7 +286,13 @@ namespace sdl
 
 		if(m_path.empty())
 			return false;
-		file << "<image path=\"" << m_path.string() << "\" />\n";
+		file << "<image>\n";
+		file << "\t<path>" << m_path.string() << "</path>\n";
+		if(m_rect->w != 0
+				&& m_rect->h != 0)
+			file << "<aabb x=\"" << itoa(m_rect->x) << "\" y=\"" << itoa(m_rect->y) << "\" w=\"" << itoa(m_rect->w) << "\" h=\"" << itoa(m_rect->h) << "\" />\n";
+		file << "</image>\n";
+
 		file << "<hotpoint x=\"" << itoa(m_edit.m_hotPoint.x) << "\" y=\"" << itoa(m_edit.m_hotPoint.y) << "\" />\n\n";
 
 		std::vector<std::string> groups = m_edit.groups();

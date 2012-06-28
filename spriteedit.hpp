@@ -66,7 +66,9 @@ namespace sdl
 
 			std::string m_current; // GAABB actuel
 			size_t m_idxCur; // SAABB actuel
+
 			ASprite::path_t m_path;
+			AABB m_rect;
 	};
 };
 

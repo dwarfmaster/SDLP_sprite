@@ -35,19 +35,9 @@ namespace sdl
 		if(elem == NULL )
 			return false;
 
-		// On récupère le chemin vers l'image
-		m_imgPath = elem->Attribute("path");
-		std::string img = m_imgPath.string();
-		if(img.empty()
-				|| !boost::filesystem::exists(img))
-			return false;
-
 		// On charge l'image
-		SDL_Surface* tmp = IMG_Load(img.c_str());
-		if(tmp == NULL)
+		if(!parseImage(elem))
 			return false;
-		Liberator lib;
-		m_img.reset(tmp, lib);
 
 		// On récupère le node hotpoint
 		elem = file.FirstChildElement("hotpoint");
@@ -198,6 +188,90 @@ namespace sdl
 		}
 
 		return col;
+	}
+
+	bool ASprite::parseImage(TiXmlElement* image)
+	{
+		TiXmlElement* elem = image->FirstChildElement("path");
+		if(elem == NULL)
+			return false;
+
+		path_t path(elem->GetText());
+		if( path.empty()
+				|| !boost::filesystem::exists(path) )
+			return false;
+
+		SDL_Surface* tmp = IMG_Load(path.string().c_str());
+		if(tmp == NULL)
+			return false;
+
+		elem = image->FirstChildElement("aabb");
+		if(elem == NULL)
+		{
+			m_rect = makeRect(0, 0, 0, 0);
+			m_imgPath = path;
+			Liberator lib;
+			m_img.reset(tmp, lib);
+			return true;
+		}
+
+		AABB rect;
+		std::string str = elem->Attribute("x");
+		if(str.empty())
+			rect->x = 0;
+		else
+		{
+			rect->x = atoi(str);
+			if(rect->x < 0)
+				rect->x = 0;
+			else if(rect->x >= tmp->w - 10)
+				rect->x = tmp->w - 11;
+		}
+
+		str = elem->Attribute("y");
+		if(str.empty())
+			rect->y = 0;
+		else
+		{
+			rect->y = atoi(str);
+			if(rect->y < 0)
+				rect->y = 0;
+			else if(rect->y >= tmp->h - 10)
+				rect->y = tmp->h - 11;
+		}
+
+		str = elem->Attribute("w");
+		if(str.empty())
+			rect->w = tmp->w - rect->x;
+		else
+			rect->w = atoi(str);
+		if(rect->w + rect->x >= tmp->w)
+			rect->w = 10;
+
+		str = elem->Attribute("h");
+		if(str.empty())
+			rect->h = tmp->h - rect->y;
+		else
+			rect->h = atoi(str);
+		if(rect->h + rect->y >= tmp->h)
+			rect->h = 10;
+
+		m_rect = rect;
+		m_imgPath = path;
+
+		SDL_Surface* img = SDL_CreateRGBSurface(SDL_HWSURFACE, rect->w, rect->h, 24, 0, 0, 0, 0);
+		if(img == NULL)
+		{
+			SDL_FreeSurface(tmp);
+			return false;
+		}
+		SDL_Rect r = rect.rect();
+		SDL_BlitSurface(tmp, &r, img, NULL);
+		SDL_FreeSurface(tmp);
+
+		Liberator lib;
+		m_img.reset(img, lib);
+		return true;
 	}
 
 	void ASprite::parseGAABB(TiXmlElement* gaabb)

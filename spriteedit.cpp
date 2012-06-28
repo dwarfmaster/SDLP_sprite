@@ -123,6 +123,14 @@ namespace sdl
 		return true;
 	}
 
+	int SpriteEditor::getPriority()
+	{
+		if(!m_edit.exist(m_current))
+			return -1;
+		
+		return m_edit.m_groups[m_current].priority;
+	}
+
 	SpriteEditor::saabbs_it SpriteEditor::SAABBbegin()
 	{
 		if(!m_edit.exist(m_current))

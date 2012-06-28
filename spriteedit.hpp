@@ -35,6 +35,7 @@ namespace sdl
 			std::vector<AABB> getGroup() const;
 
 			bool setPriority(int newp);
+			int getPriority();
 			saabbs_it SAABBbegin();
 			saabbs_it SAABBend();
 			bool modifie(const AABB& nvalue); // Modifie la SAABB courante

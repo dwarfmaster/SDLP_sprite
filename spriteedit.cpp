@@ -17,13 +17,21 @@ namespace sdl
 		this->set(cp);
 	}
 
+	SpriteEditor::~SpriteEditor()
+	{
+		this->clear();
+	}
+
 	SpriteEditor& SpriteEditor::set(const SpriteEditor& cp)
 	{
+		this->clear();
 		m_edit = cp.m_edit;
 		m_current = cp.m_current;
 		m_idxCur = cp.m_idxCur;
 		m_path = cp.m_path;
 		m_rect = cp.m_rect;
+		m_total = cp.m_total;
+		toFree = false;
 		return *this;
 	}
 
@@ -33,6 +41,19 @@ namespace sdl
 		m_edit = sprite;
 		m_path = sprite.m_imgPath;
 		m_rect = sprite.m_rect;
+
+		SDL_Surface* img = IMG_Load(m_path.string().c_str());
+		if(img == NULL)
+		{
+			toFree=false;
+			m_total = sprite.getPtr();
+		}
+		else
+		{
+			m_total = img;
+			toFree=true;
+		}
+
 		return *this;
 	}
 
@@ -42,6 +63,11 @@ namespace sdl
 		m_idxCur = 0;
 		m_path = "";
 		m_rect = makeRect(0, 0, 0, 0);
+
+		if(toFree)
+			SDL_FreeSurface(m_total);
+		m_total = NULL;
+		toFree=false;
 		return *this;
 	}
 
@@ -130,7 +156,7 @@ namespace sdl
 	{
 		if(!m_edit.exist(m_current))
 			return -1;
-		
+
 		return m_edit.m_groups[m_current].priority;
 	}
 
@@ -249,7 +275,7 @@ namespace sdl
 	bool SpriteEditor::deleteSAABB(size_t idx)
 	{
 		if( !m_edit.exist(m_current)
-			|| idx >= m_edit.m_groups[m_current].aabbs.size() )
+				|| idx >= m_edit.m_groups[m_current].aabbs.size() )
 			return false;
 
 		m_edit.m_groups[m_current].aabbs.erase( m_edit.m_groups[m_current].aabbs.begin() + idx );
@@ -264,6 +290,54 @@ namespace sdl
 	ASprite::path_t SpriteEditor::getPath() const
 	{
 		return m_path;
+	}
+
+	SDL_Surface* SpriteEditor::getTotal()
+	{
+		return m_total;
+	}
+
+	SDL_Surface* SpriteEditor::getReal()
+	{
+		return m_edit.getPtr();
+	}
+
+	AABB SpriteEditor::getSubRect()
+	{
+		return m_rect;
+	}
+
+	void SpriteEditor::setSubRect(AABB rect)
+	{
+		if(rect->x < 0)
+			rect->x = 0;
+		else if(rect->x >= m_total->w - 10)
+			rect->x = m_total->w - 11;
+
+		if(rect->y < 0)
+			rect->y = 0;
+		else if(rect->y >= m_total->h - 10)
+			rect->y = m_total->h - 11;
+
+		if(rect->w + rect->x >= m_total->w)
+			rect->w = 10;
+
+		if(rect->h + rect->y >= m_total->h)
+			rect->h = 10;
+
+		m_rect = rect;
+
+		SDL_Surface* img = SDL_CreateRGBSurface(SDL_HWSURFACE, rect->w, rect->h, 24, 0, 0, 0, 0);
+		if(img == NULL)
+		{
+			SDL_FreeSurface(m_total);
+			return;
+		}
+		SDL_Rect r = rect.rect();
+		SDL_BlitSurface(m_total, &r, img, NULL);
+
+		Liberator lib;
+		m_edit.m_img.reset(img, lib);
 	}
 
 	ASprite SpriteEditor::tmpSprite() const

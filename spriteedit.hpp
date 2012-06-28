@@ -15,6 +15,7 @@ namespace sdl
 			SpriteEditor();
 			SpriteEditor(const ASprite& sprite);
 			SpriteEditor(const SpriteEditor& cp);
+			~SpriteEditor();
 
 			SpriteEditor& set(const SpriteEditor& cp);
 			SpriteEditor& set(const ASprite& sprite);
@@ -55,6 +56,11 @@ namespace sdl
 			Pointsi hotpoint() const;
 			ASprite::path_t getPath() const;
 
+			SDL_Surface* getTotal();
+			SDL_Surface* getReal();
+			AABB getSubRect();
+			void setSubRect(AABB rect);
+
 			ASprite tmpSprite() const; // Retourne la Sprite en construction : non utilisable mais permet d'avoir des infos
 			ASprite* operator->(); // Idem, permet un accès plus rapide
 
@@ -69,6 +75,8 @@ namespace sdl
 
 			ASprite::path_t m_path;
 			AABB m_rect;
+			SDL_Surface* m_total;
+			bool toFree;
 	};
 };
 

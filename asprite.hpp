@@ -41,7 +41,9 @@ namespace sdl
 			SDL_Surface* getPtr() const; // Dangereux
 
 			Pointsi hotPoint() const;
+			Vector2f decale() const; // retourne le décalage nécessaire à partir du hotPoint.
 
+			AABB global() const;
 			std::vector<AABB> saabb(std::string id) const;
 			AABB globalSAABB(std::string id) const;
 			std::vector<AABB> operator[](std::string id) const;
@@ -49,6 +51,9 @@ namespace sdl
 			std::vector<std::string> groups() const;
 			std::vector<std::string> inGroup(const Pointsi& p) const;
 			std::string inUniqueGroup(const Pointsi& p) const;
+
+			// Les groupes du premiers qui sont en colision avec le second
+			std::vector< std::pair<std::string, std::string> > colision(Pointsi pos1, const ASprite& other, Pointsi pos2) const;
 
 		private:
 			struct GAABB // Groupe de SAABB
@@ -60,6 +65,8 @@ namespace sdl
 			std::map<std::string, GAABB> m_groups;
 			typedef std::map<std::string,GAABB>::iterator group_iterator;
 			typedef std::map<std::string,GAABB>::const_iterator c_group_iterator;
+
+			AABB m_global;
 
 			Pointsi m_hotPoint;
 

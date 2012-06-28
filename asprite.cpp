@@ -21,6 +21,7 @@ namespace sdl
 		m_hotPoint = cp.m_hotPoint;
 		m_img = cp.m_img;
 		m_imgPath = cp.m_imgPath;
+		m_global = cp.m_global;
 	}
 
 	bool ASprite::load(ASprite::path_t path)
@@ -71,6 +72,11 @@ namespace sdl
 			elem = elem->NextSiblingElement("gaabb");
 		}
 
+		std::vector<AABB> globals;
+		for(group_iterator it = m_groups.begin(); it != m_groups.end(); ++it)
+			globals.push_back(it->second.global);
+		m_global.englobe(globals);
+
 		return true;
 	}
 
@@ -110,6 +116,16 @@ namespace sdl
 	Pointsi ASprite::hotPoint() const
 	{
 		return m_hotPoint;
+	}
+
+	Vector2f ASprite::decale() const
+	{
+		return Vector2f(-m_hotPoint.x, -m_hotPoint.y);
+	}
+
+	AABB ASprite::global() const
+	{
+		return m_global;
 	}
 
 	std::vector<AABB> ASprite::saabb(std::string id) const
@@ -231,6 +247,61 @@ namespace sdl
 
 		group.global.englobe(group.aabbs);
 		m_groups[name]=group;
+	}
+
+	std::vector< std::pair<std::string, std::string> > ASprite::colision(Pointsi pos1, const ASprite& other, Pointsi pos2) const
+	{
+		std::vector< std::pair<std::string, std::string> > vec;
+
+		pos1 += decale();
+		pos2 += other.decale();
+
+		AABB global1 = global();
+		global1.move(pos1);
+		AABB global2 = other.global();
+		global2.move(pos2);
+
+		if(!global1.colision(global2))
+			return vec;
+
+		std::vector<std::string> g1 = groups();
+		std::vector<std::string> g2 = other.groups();
+
+		for(size_t i=0; i<g1.size(); ++i)
+		{
+			for(size_t j=0; j<g2.size(); ++j)
+			{
+				AABB gl1 = globalSAABB(g1[i]);
+				gl1.move(pos1);
+				AABB gl2 = other.globalSAABB(g2[j]);
+				gl2.move(pos2);
+
+				if(gl1.colision(gl2))
+				{
+					std::vector<AABB> saabb1 = saabb(g1[i]);
+					std::vector<AABB> saabb2 = other.saabb(g2[j]);
+
+					for(size_t k=0; k<saabb1.size(); ++k)
+					{
+						saabb1[k].move(pos1);
+						for(size_t l=0; l<saabb2.size(); ++l)
+						{
+							saabb2[l].move(pos2);
+							if(saabb1[k].colision(saabb2[l]))
+							{
+								std::pair<std::string, std::string> p(g1[i], g2[j]);
+								vec.push_back(p);
+								// On met fin aux boucles
+								k = saabb1.size();
+								l = saabb2.size();
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return vec;
 	}
 };
 

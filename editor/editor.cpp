@@ -306,7 +306,7 @@ void Editor::loadImage(path_t path)
 	if(m_savedsurf == NULL)
 		throw std::string("Erreur à la création de la surface originale.");
 
-	SDL_BlitSurface(tmp, &rect, m_savedsurf, &rect);
+	SDL_BlitSurface(tmp, &rect, m_savedsurf, NULL);
 	SDL_FreeSurface(tmp);
 	tmp = m_savedsurf;
 	m_savedsurf = SDL_DisplayFormat(tmp);

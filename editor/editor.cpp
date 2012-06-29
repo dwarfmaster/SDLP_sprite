@@ -191,7 +191,8 @@ void Editor::colors()
 	// gcn::Color bs(125, 125, 125);
 	gcn::Color bs(100, 100, 0);
 	gcn::Color bg(0, 0, 0);
-	gcn::Color fg(150, 100, 0);
+	gcn::Color fg(255, 165, 0);
+	// gcn::Color fg(150, 100, 0);
 	gcn::Color sl(255, 165, 0);
 
 	setColor(m_save, bs, bg, fg, sl);
@@ -299,6 +300,15 @@ void Editor::loadImage(path_t path)
 	SDL_Surface* tmp = IMG_Load(path.string().c_str());
 	if(tmp == NULL)
 		throw std::string("Erreur au chargement de l'image.");
+	SDL_Rect rect = m_editor->getSubRect().rect();
+
+	m_savedsurf = SDL_CreateRGBSurface(SDL_HWSURFACE, rect.w, rect.h, 24, 0, 0, 0, 0);
+	if(m_savedsurf == NULL)
+		throw std::string("Erreur à la création de la surface originale.");
+
+	SDL_BlitSurface(tmp, &rect, m_savedsurf, &rect);
+	SDL_FreeSurface(tmp);
+	tmp = m_savedsurf;
 	m_savedsurf = SDL_DisplayFormat(tmp);
 	SDL_FreeSurface(tmp);
 

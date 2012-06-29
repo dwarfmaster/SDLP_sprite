@@ -246,7 +246,7 @@ namespace sdl
 		else
 			rect->w = atoi(str);
 		if(rect->w + rect->x >= tmp->w)
-			rect->w = 10;
+			rect->w = tmp->w - rect->x;
 
 		str = elem->Attribute("h");
 		if(str.empty())
@@ -254,7 +254,7 @@ namespace sdl
 		else
 			rect->h = atoi(str);
 		if(rect->h + rect->y >= tmp->h)
-			rect->h = 10;
+			rect->h = tmp->h - rect->y;
 
 		m_rect = rect;
 		m_imgPath = path;

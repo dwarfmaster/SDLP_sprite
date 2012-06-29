@@ -4,16 +4,19 @@ namespace sdl
 {
 	SpriteEditor::SpriteEditor()
 	{
+		toFree=false;
 		this->clear();
 	}
 
 	SpriteEditor::SpriteEditor(const ASprite& sprite)
 	{
+		toFree=false;
 		this->set(sprite);
 	}
 
 	SpriteEditor::SpriteEditor(const SpriteEditor& cp)
 	{
+		toFree=false;
 		this->set(cp);
 	}
 
@@ -45,8 +48,8 @@ namespace sdl
 		SDL_Surface* img = IMG_Load(m_path.string().c_str());
 		if(img == NULL)
 		{
-			toFree=false;
 			m_total = sprite.getPtr();
+			toFree=false;
 		}
 		else
 		{
@@ -304,11 +307,22 @@ namespace sdl
 
 	AABB SpriteEditor::getSubRect()
 	{
-		return m_rect;
+		AABB rect(m_rect);
+
+		if(rect->w == 0
+				|| rect->h == 0)
+		{
+			rect->w = m_total->w;
+			rect->h = m_total->h;
+		}
+
+		return rect;
 	}
 
 	void SpriteEditor::setSubRect(AABB rect)
 	{
+		Pointsi lori = m_rect[AABB::TOP_LEFT]; // Last origine
+
 		if(rect->x < 0)
 			rect->x = 0;
 		else if(rect->x >= m_total->w - 10)
@@ -320,19 +334,53 @@ namespace sdl
 			rect->y = m_total->h - 11;
 
 		if(rect->w + rect->x >= m_total->w)
-			rect->w = 10;
+			rect->w = m_total->w - rect->x;
 
 		if(rect->h + rect->y >= m_total->h)
-			rect->h = 10;
+			rect->h = m_total->h - rect->y;
 
 		m_rect = rect;
+		Pointsi nori = rect[AABB::TOP_LEFT]; // New origine
+		Vector2f vec(lori, nori);
+		vec = -vec;
+
+		std::vector<std::string> gr = groups();
+		for(size_t i=0; i<gr.size(); ++i)
+		{
+			setCurrent(gr[i]);
+			for(saabbs_it it=SAABBbegin(); it!=SAABBend(); ++it)
+			{
+				Pointsi tl = it->location(AABB::TOP_LEFT);
+				tl += vec;
+				it->move(tl);
+
+				if((*it)->x >= rect->x + rect->w
+						|| (*it)->y >= rect->x + rect->w
+						|| (*it)->x + (*it)->w <= rect->x
+						|| (*it)->y + (*it)->h <= rect->y )
+					m_edit.m_groups[m_current].aabbs.erase(it);
+
+				if( (*it)->x + (*it)->w >= rect->x + rect->w )
+					(*it)->w = rect->x + rect->w - (*it)->x;
+
+				if( (*it)->y + (*it)->h >= rect->y + rect->h )
+					(*it)->h = rect->y + rect->h - (*it)->y;
+			}
+		}
+
+		if(m_edit.m_hotPoint.x < rect->x)
+			m_edit.m_hotPoint.x = rect->x;
+		else if(m_edit.m_hotPoint.x >= rect->x + rect->w)
+			m_edit.m_hotPoint.x = rect->x + rect->w - 1;
+
+		if(m_edit.m_hotPoint.y < rect->y)
+			m_edit.m_hotPoint.y = rect->y;
+		else if(m_edit.m_hotPoint.y >= rect->y + rect->h)
+			m_edit.m_hotPoint.y = rect->y + rect->h - 1;
 
 		SDL_Surface* img = SDL_CreateRGBSurface(SDL_HWSURFACE, rect->w, rect->h, 24, 0, 0, 0, 0);
 		if(img == NULL)
-		{
-			SDL_FreeSurface(m_total);
 			return;
-		}
 		SDL_Rect r = rect.rect();
 		SDL_BlitSurface(m_total, &r, img, NULL);
 
@@ -385,6 +433,7 @@ namespace sdl
 		return true;
 	}
 
+	// À finir
 	ASprite SpriteEditor::create() const
 	{
 		ASprite sprite;

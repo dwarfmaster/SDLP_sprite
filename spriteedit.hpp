@@ -59,7 +59,7 @@ namespace sdl
 			SDL_Surface* getTotal();
 			SDL_Surface* getReal();
 			AABB getSubRect();
-			void setSubRect(AABB rect);
+			void setSubRect(AABB rect); // À utiliser avec précaution : les saabbs à l'extérieures seront supprimées et celles dépassant raccoucies
 
 			ASprite tmpSprite() const; // Retourne la Sprite en construction : non utilisable mais permet d'avoir des infos
 			ASprite* operator->(); // Idem, permet un accès plus rapide

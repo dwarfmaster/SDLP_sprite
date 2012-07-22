@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<image>
-	<path>/home/luc/Images/ma_super_image.png</path>
-	<aabb x="125" y="236" w="14" h="56" />
-	<!-- aabb facultatif : toute l'image sera prise en compte -->
-</image>
-<hotpoint x="125" y="256" />
+<image path="/home/luc/Images/ma_super_image.png" />
 
-<!-- En cas de priority égal pour 2 : cas indéterminé -->
-<gaabb id="corp" priority="2">
-	<saabb x="120" y="135" w="25" h="36" />
-	<saabb x="150" y="135" w="25" h="36" />
-	<saabb x="20" y="189" w="25" h="36" />
-	<saabb x="12" y="35" w="256" h="136" />
-</gaabb>
+<sprite id="ma_super_sprite" x="125" y="236" w="14" h="56">
+	<hotpoint x="125" y="256" />
 
-<!-- Et autant de gaabb qu'on veut -->
+	<!-- En cas de priority égal pour plusieurs : cas indéterminé -->
+	<gaabb id="corp" priority="2">
+		<saabb x="120" y="135" w="25" h="36" />
+		<saabb x="150" y="135" w="25" h="36" />
+		<saabb x="20" y="189" w="25" h="36" />
+		<saabb x="12" y="35" w="256" h="136" />
+	</gaabb>
+	<!-- Et autant de gaabb qu'on veut -->
+	<!-- Si deux gaabb on le même id : cas indéterminé -->
+</sprite>
 
+<!-- Et autant de sprite qu'on veut -->
+<!-- Si deux sprites ont le même id : cas indéterminé -->

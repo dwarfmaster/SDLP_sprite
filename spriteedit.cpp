@@ -348,7 +348,7 @@ namespace sdl
 		for(size_t i=0; i<gr.size(); ++i)
 		{
 			setCurrent(gr[i]);
-			for(saabbs_it it=SAABBbegin(); it!=SAABBend(); ++it)
+			for(saabbs_it it = SAABBbegin(); it != SAABBend(); ++it)
 			{
 				Pointsi tl = it->location(AABB::TOP_LEFT);
 				tl += vec;
@@ -433,32 +433,22 @@ namespace sdl
 		return true;
 	}
 
-	// À finir
 	ASprite SpriteEditor::create() const
 	{
 		ASprite sprite;
 
 		sprite.m_groups = m_edit.m_groups;
 		std::vector<std::string> groups = m_edit.groups();
+		std::vector<AABB> globals;
 		for(size_t i=0; i<groups.size(); ++i)
+		{
 			sprite.m_groups[groups[i]].global.englobe(sprite.m_groups[groups[i]].aabbs);
+			globals.push_back( sprite.m_groups[groups[i]].global );
+		}
+		sprite.m_global.englobe(globals);
 
 		sprite.m_hotPoint = m_edit.m_hotPoint;
-		sprite.m_imgPath = m_path;
-
-		if( !m_path.empty()
-				&& boost::filesystem::exists(m_path) 
-				&& !boost::filesystem::is_empty(m_path)
-				&& !boost::filesystem::is_directory(m_path) )
-		{
-			SDL_Surface* tmp = IMG_Load(m_path.string().c_str());
-			if( tmp == NULL )
-				return sprite;
-			Liberator lib;
-			sprite.m_img.reset(tmp, lib);
-		}
-		else if(m_edit.m_img)
-			sprite.m_img = m_edit.m_img;
+		sprite.m_img = m_edit.m_img;
 
 		return sprite;
 	}

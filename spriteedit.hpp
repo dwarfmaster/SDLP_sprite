@@ -4,6 +4,7 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include "asprite.hpp"
+#include "spritefile.hpp"
 
 namespace sdl
 {
@@ -13,16 +14,18 @@ namespace sdl
 			typedef std::vector<AABB>::iterator saabbs_it;
 
 			SpriteEditor();
-			SpriteEditor(const ASprite& sprite);
+			SpriteEditor(const ASprite& sprite); // TODO à supprimer
 			SpriteEditor(const SpriteEditor& cp);
+			SpriteEditor(const SpriteFile& file, std::string id); // TODO à faire
 			~SpriteEditor();
 
 			SpriteEditor& set(const SpriteEditor& cp);
-			SpriteEditor& set(const ASprite& sprite);
+			SpriteEditor& set(const ASprite& sprite); // TODO à supprimer
+			SpriteEditor& set(const SpriteFile& file, std::string id); // TODO à faire
 			SpriteEditor& clear();
 
 			SpriteEditor& operator=(const SpriteEditor& cp);
-			SpriteEditor& operator=(const ASprite& sprite);
+			SpriteEditor& operator=(const ASprite& sprite); // TODO à supprimer
 
 			std::vector<std::string> groups() const;
 			size_t nbGroups() const;
@@ -59,12 +62,12 @@ namespace sdl
 			SDL_Surface* getTotal();
 			SDL_Surface* getReal();
 			AABB getSubRect();
-			void setSubRect(AABB rect); // À utiliser avec précaution : les saabbs à l'extérieures seront supprimées et celles dépassant raccoucies
+			void setSubRect(AABB rect); // À utiliser avec précaution : les saabbs à l'extérieures seront supprimées et celles dépassant raccoucies // TODO à supprimer
 
 			ASprite tmpSprite() const; // Retourne la Sprite en construction : non utilisable mais permet d'avoir des infos
 			ASprite* operator->(); // Idem, permet un accès plus rapide
 
-			bool save(const ASprite::path_t& path) const;
+			bool save(const ASprite::path_t& path) const; // TODO à modifier
 			ASprite create() const;
 
 		private:

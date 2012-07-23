@@ -4,20 +4,17 @@ namespace sdl
 {
 	SpriteEditor::SpriteEditor()
 	{
-		toFree=false;
 		this->clear();
-	}
-
-	SpriteEditor::SpriteEditor(const ASprite& sprite)
-	{
-		toFree=false;
-		this->set(sprite);
 	}
 
 	SpriteEditor::SpriteEditor(const SpriteEditor& cp)
 	{
-		toFree=false;
 		this->set(cp);
+	}
+
+	SpriteEditor::SpriteEditor(SpriteFile* file, std::string id)
+	{
+		this->set(file, id);
 	}
 
 	SpriteEditor::~SpriteEditor()
@@ -31,31 +28,18 @@ namespace sdl
 		m_edit = cp.m_edit;
 		m_current = cp.m_current;
 		m_idxCur = cp.m_idxCur;
-		m_path = cp.m_path;
-		m_rect = cp.m_rect;
-		m_total = cp.m_total;
-		toFree = false;
+		m_file = cp.m_file;
+		m_id = cp.m_id;
+
 		return *this;
 	}
 
-	SpriteEditor& SpriteEditor::set(const ASprite& sprite)
+	SpriteEditor& SpriteEditor::set(SpriteFile* file, std::string id)
 	{
 		this->clear();
-		m_edit = sprite;
-		m_path = sprite.m_imgPath;
-		m_rect = sprite.m_rect;
-
-		SDL_Surface* img = IMG_Load(m_path.string().c_str());
-		if(img == NULL)
-		{
-			m_total = sprite.getPtr();
-			toFree=false;
-		}
-		else
-		{
-			m_total = img;
-			toFree=true;
-		}
+		m_file = file;
+		m_id = id;
+		m_edit = m_file->getSprite(m_id);
 
 		return *this;
 	}
@@ -64,25 +48,15 @@ namespace sdl
 	{
 		m_current = "";
 		m_idxCur = 0;
-		m_path = "";
-		m_rect = makeRect(0, 0, 0, 0);
+		m_file = NULL;
+		m_id.clear();
 
-		if(toFree)
-			SDL_FreeSurface(m_total);
-		m_total = NULL;
-		toFree=false;
 		return *this;
 	}
 
 	SpriteEditor& SpriteEditor::operator=(const SpriteEditor& cp)
 	{
 		this->set(cp);
-		return *this;
-	}
-
-	SpriteEditor& SpriteEditor::operator=(const ASprite& sprite)
-	{
-		this->set(sprite);
 		return *this;
 	}
 
@@ -238,12 +212,6 @@ namespace sdl
 		return m_edit.m_groups[str].aabbs;
 	}
 
-	void SpriteEditor::setPath(const ASprite::path_t& path)
-	{
-		m_path = path;
-		m_edit.m_img.reset();
-	}
-
 	void SpriteEditor::setHotPoint(const Pointsi& hp)
 	{
 		m_edit.m_hotPoint = hp;
@@ -290,102 +258,9 @@ namespace sdl
 		return m_edit.m_hotPoint;
 	}
 
-	ASprite::path_t SpriteEditor::getPath() const
-	{
-		return m_path;
-	}
-
-	SDL_Surface* SpriteEditor::getTotal()
-	{
-		return m_total;
-	}
-
 	SDL_Surface* SpriteEditor::getReal()
 	{
 		return m_edit.getPtr();
-	}
-
-	AABB SpriteEditor::getSubRect()
-	{
-		AABB rect(m_rect);
-
-		if(rect->w == 0
-				|| rect->h == 0)
-		{
-			rect->w = m_total->w;
-			rect->h = m_total->h;
-		}
-
-		return rect;
-	}
-
-	void SpriteEditor::setSubRect(AABB rect)
-	{
-		Pointsi lori = m_rect[AABB::TOP_LEFT]; // Last origine
-
-		if(rect->x < 0)
-			rect->x = 0;
-		else if(rect->x >= m_total->w - 10)
-			rect->x = m_total->w - 11;
-
-		if(rect->y < 0)
-			rect->y = 0;
-		else if(rect->y >= m_total->h - 10)
-			rect->y = m_total->h - 11;
-
-		if(rect->w + rect->x >= m_total->w)
-			rect->w = m_total->w - rect->x;
-
-		if(rect->h + rect->y >= m_total->h)
-			rect->h = m_total->h - rect->y;
-
-		m_rect = rect;
-		Pointsi nori = rect[AABB::TOP_LEFT]; // New origine
-		Vector2f vec(lori, nori);
-		vec = -vec;
-
-		std::vector<std::string> gr = groups();
-		for(size_t i=0; i<gr.size(); ++i)
-		{
-			setCurrent(gr[i]);
-			for(saabbs_it it = SAABBbegin(); it != SAABBend(); ++it)
-			{
-				Pointsi tl = it->location(AABB::TOP_LEFT);
-				tl += vec;
-				it->move(tl);
-
-				if((*it)->x >= rect->x + rect->w
-						|| (*it)->y >= rect->x + rect->w
-						|| (*it)->x + (*it)->w <= rect->x
-						|| (*it)->y + (*it)->h <= rect->y )
-					m_edit.m_groups[m_current].aabbs.erase(it);
-
-				if( (*it)->x + (*it)->w >= rect->x + rect->w )
-					(*it)->w = rect->x + rect->w - (*it)->x;
-
-				if( (*it)->y + (*it)->h >= rect->y + rect->h )
-					(*it)->h = rect->y + rect->h - (*it)->y;
-			}
-		}
-
-		if(m_edit.m_hotPoint.x < rect->x)
-			m_edit.m_hotPoint.x = rect->x;
-		else if(m_edit.m_hotPoint.x >= rect->x + rect->w)
-			m_edit.m_hotPoint.x = rect->x + rect->w - 1;
-
-		if(m_edit.m_hotPoint.y < rect->y)
-			m_edit.m_hotPoint.y = rect->y;
-		else if(m_edit.m_hotPoint.y >= rect->y + rect->h)
-			m_edit.m_hotPoint.y = rect->y + rect->h - 1;
-
-		SDL_Surface* img = SDL_CreateRGBSurface(SDL_HWSURFACE, rect->w, rect->h, 24, 0, 0, 0, 0);
-		if(img == NULL)
-			return;
-		SDL_Rect r = rect.rect();
-		SDL_BlitSurface(m_total, &r, img, NULL);
-
-		Liberator lib;
-		m_edit.m_img.reset(img, lib);
 	}
 
 	ASprite SpriteEditor::tmpSprite() const
@@ -407,7 +282,7 @@ namespace sdl
 			groups[it->first].priority = it->second.priority;
 		}
 
-		m_file->changeSprite(m_id, groups, m_edit.m_hotPoint, m_rect);
+		m_file->changeSprite(m_id, groups, m_edit.m_hotPoint);
 		return m_file->save(path);
 	}
 

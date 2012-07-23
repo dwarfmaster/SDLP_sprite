@@ -14,18 +14,15 @@ namespace sdl
 			typedef std::vector<AABB>::iterator saabbs_it;
 
 			SpriteEditor();
-			SpriteEditor(const ASprite& sprite); // TODO à supprimer
 			SpriteEditor(const SpriteEditor& cp);
-			SpriteEditor(SpriteFile* file, std::string id); // TODO à faire
+			SpriteEditor(SpriteFile* file, std::string id);
 			~SpriteEditor();
 
-			SpriteEditor& set(const SpriteEditor& cp); // TODO à modifier
-			SpriteEditor& set(const ASprite& sprite); // TODO à supprimer
-			SpriteEditor& set(SpriteFile* file, std::string id); // TODO à faire
+			SpriteEditor& set(const SpriteEditor& cp);
+			SpriteEditor& set(SpriteFile* file, std::string id);
 			SpriteEditor& clear();
 
 			SpriteEditor& operator=(const SpriteEditor& cp);
-			SpriteEditor& operator=(const ASprite& sprite); // TODO à supprimer
 
 			std::vector<std::string> groups() const;
 			size_t nbGroups() const;
@@ -50,19 +47,14 @@ namespace sdl
 			AABB& operator[](size_t idx); // Stoppe le programme en cas d'erreur d'index : à utiliser avec précaution
 			std::vector<AABB>& operator[](std::string str); // Idem
 
-			void setPath(const ASprite::path_t& path);
 			void setHotPoint(const Pointsi& hp);
 			bool addGroup(std::string gr);
 			bool deleteGroup(std::string str);
 			bool addSAABB(const AABB& saabb);
 			bool deleteSAABB(size_t idx);
 			Pointsi hotpoint() const;
-			ASprite::path_t getPath() const;
 
-			SDL_Surface* getTotal();
 			SDL_Surface* getReal();
-			AABB getSubRect();
-			void setSubRect(AABB rect); // À utiliser avec précaution : les saabbs à l'extérieures seront supprimées et celles dépassant raccoucies // TODO à supprimer
 
 			ASprite tmpSprite() const; // Retourne la Sprite en construction : non utilisable mais permet d'avoir des infos
 			ASprite* operator->(); // Idem, permet un accès plus rapide
@@ -75,11 +67,6 @@ namespace sdl
 
 			std::string m_current; // GAABB actuel
 			size_t m_idxCur; // SAABB actuel
-
-			ASprite::path_t m_path;
-			AABB m_rect;
-			SDL_Surface* m_total;
-			bool toFree;
 
 			SpriteFile* m_file;
 			std::string m_id;

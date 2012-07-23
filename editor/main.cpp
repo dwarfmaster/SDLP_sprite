@@ -2,17 +2,18 @@
 
 int main(int argc, char *argv[])
 {
-	if(argc < 2)
+	if(argc < 3)
 	{
 		std::cerr<<"Absence d'argument."<<std::endl;
 		return 1;
 	}
 	boost::filesystem::path path(argv[1]);
+	std::string id(argv[2]);
 
 	try
 	{
 		Editor edit;
-		edit.load(path);
+		edit.load(path, id);
 
 		edit.loop();
 		edit.free();

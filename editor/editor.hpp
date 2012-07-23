@@ -26,7 +26,7 @@ class Editor
 		typedef sdl::ASprite::path_t path_t;
 
 		Editor();
-		void load(path_t path);
+		void load(path_t path, std::string id);
 		void loop();
 		void free();
 
@@ -52,15 +52,16 @@ class Editor
 		void addSAABB();
 		void deleteSAABB();
 
-		sdl::SpriteEditor* m_editor;
-		void loadSpriteEditor(path_t path);
+		void loadSpriteEditor(path_t path, std::string id);
 
-		void loadImage(path_t path);
+		void loadImage();
 		void putPixel(int x, int y, gcn::Color* c=NULL);
 		SDL_Rect maxSizeScreen() const;
 		void setColor(gcn::Widget* wid, const gcn::Color& bs, const gcn::Color& bg, const gcn::Color& fg, const gcn::Color& sl);
 
 		// General Elements
+		sdl::SpriteFile* m_file;
+		sdl::SpriteEditor* m_editor;
 		path_t m_firstPath;
 		sdl::AnEvent* m_U;
 		sdl::AnEvent* m_space;

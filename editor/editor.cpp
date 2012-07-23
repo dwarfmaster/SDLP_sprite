@@ -1,7 +1,7 @@
 #include "editor.hpp"
 
 	Editor::Editor()
-: m_U(NULL), m_space(NULL), m_icon(NULL),
+: m_file(NULL), m_editor(NULL), m_U(NULL), m_space(NULL), m_icon(NULL),
 	ecran(NULL), m_input(NULL), m_graph(NULL), m_loader(NULL),
 	m_gui(NULL), m_top(NULL), m_font(NULL),
 	m_savedsurf(NULL), m_usedsurf(NULL), m_image(NULL), m_img(NULL), m_scroll(NULL), m_save(NULL),
@@ -39,7 +39,7 @@ void Editor::loop()
 	}
 }
 
-void Editor::load(path_t path)
+void Editor::load(path_t path, std::string id)
 {
 	if( SDL_Init(SDL_INIT_VIDEO) < 0 )
 		throw std::string("Erreur au chargement de la lib SDL.");
@@ -78,9 +78,9 @@ void Editor::load(path_t path)
 	m_font = new gcn::ImageFont("font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");
 	gcn::Widget::setGlobalFont(m_font);
 
-	loadSpriteEditor(path);
+	loadSpriteEditor(path, id);
 
-	loadImage(m_editor->getPath());
+	loadImage();
 	m_image = new gcn::SDLImage(m_usedsurf, false);
 	m_img = new gcn::Icon(m_image);
 	m_scroll = new EditorArea(m_editor, this, m_img);
@@ -254,6 +254,7 @@ void Editor::free()
 	delete m_deleteSaabb;
 
 	delete m_editor;
+	delete m_file;
 
 	delete m_font;
 	delete m_top;
@@ -274,43 +275,34 @@ void Editor::update()
 	drawSAABBS();
 }
 
-void Editor::loadSpriteEditor(path_t path)
+void Editor::loadSpriteEditor(path_t path, std::string id)
 {
 	std::string ext = boost::filesystem::extension(path);
 
 	if(ext == ".sprite"
+			|| ext == ".sprites"
 			|| ext == ".xml")
 	{
-		sdl::ASprite sprite;
-		if(!sprite.load(path))
+		m_file = new sdl::SpriteFile;
+		if(!m_file->load(path))
 			throw std::string("Erreur au chargement du sprite.");
-		m_editor = new sdl::SpriteEditor(sprite);
+		m_editor = new sdl::SpriteEditor(m_file, id);
 	}
 	else
-	{
-		m_editor = new sdl::SpriteEditor;
-		m_editor->setPath(path);
-	}
+		throw std::string("Le fichier à charger n'est pas un sprite.");
 
 	m_firstPath = path;
 }
 
-void Editor::loadImage(path_t path)
+void Editor::loadImage()
 {
-	SDL_Surface* tmp = IMG_Load(path.string().c_str());
-	if(tmp == NULL)
-		throw std::string("Erreur au chargement de l'image.");
-	SDL_Rect rect = m_editor->getSubRect().rect();
-
-	m_savedsurf = SDL_CreateRGBSurface(SDL_HWSURFACE, rect.w, rect.h, 24, 0, 0, 0, 0);
+	m_savedsurf = m_editor->getReal();
 	if(m_savedsurf == NULL)
-		throw std::string("Erreur à la création de la surface originale.");
+		throw std::string("Erreur à l'obtention de l'image.");
 
-	SDL_BlitSurface(tmp, &rect, m_savedsurf, NULL);
-	SDL_FreeSurface(tmp);
-	tmp = m_savedsurf;
+	SDL_Surface* tmp = m_savedsurf;
 	m_savedsurf = SDL_DisplayFormat(tmp);
-	SDL_FreeSurface(tmp);
+	// SDL_FreeSurface(tmp); -> tmp sera libéré par le pointeur automatique de boost
 
 	tmp = SDL_CreateRGBSurface(SDL_HWSURFACE, m_savedsurf->w, m_savedsurf->h, 24, 0, 0, 0, 0);
 	if(tmp == NULL)
@@ -324,6 +316,7 @@ bool Editor::save()
 {
 	m_editor->setPriority( sdl::atoi(m_priority->getText()) );
 	path_t path = boost::filesystem::change_extension(m_firstPath, ".sprite");
+	std::cout << "Save path : " << path << std::endl; // TODO juste pour tester
 	m_editor->save(path);
 	return true;
 }

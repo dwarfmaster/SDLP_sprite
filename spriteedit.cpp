@@ -306,4 +306,19 @@ namespace sdl
 		return sprite;
 	}
 
+	bool SpriteEditor::check() const
+	{
+		return m_file != NULL;
+	}
+
+	SpriteEditor::operator bool() const
+	{
+		return check();
+	}
+
+	bool SpriteEditor::operator!() const
+	{
+		return !check();
+	}
+
 };

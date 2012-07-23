@@ -62,6 +62,10 @@ namespace sdl
 			bool save(const ASprite::path_t& path) const;
 			ASprite create() const;
 
+			bool check() const; // Teste si la classe peut être utilisée (dans le cas contraire, elle peut déclencher des segfaults)
+			operator bool() const; // idem
+			bool operator!() const; // idem
+
 		private:
 			ASprite m_edit;
 

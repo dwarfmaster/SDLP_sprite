@@ -86,12 +86,15 @@ namespace sdl
 
 		boost::shared_ptr<SDL_Surface> img;
 		SDL_Surface* surf = SDL_CreateRGBSurface(SDL_HWSURFACE, m_sprites[id].rect->w, m_sprites[id].rect->h, 24, 0, 0, 0, 0);
-		SDL_Surface* tmp = SDL_DisplayFormatAlpha(surf);
-		if(tmp == NULL)
-			return err;
-		else
-			SDL_FreeSurface(surf);
-		surf=tmp;
+		if(SDL_GetVideoSurface() != NULL)
+		{
+			SDL_Surface* tmp = SDL_DisplayFormatAlpha(surf);
+			if(tmp == NULL)
+				return err;
+			else
+				SDL_FreeSurface(surf);
+			surf=tmp;
+		}
 
 		SDL_Rect clip = m_sprites[id].rect.rect();
 		SDL_BlitSurface(m_img.get(), &clip, surf, NULL);
@@ -310,7 +313,7 @@ namespace sdl
 						<< "\" />\n";
 				}
 
-				file << "</gaabb>\n\n";
+				file << "\t</gaabb>\n\n";
 			}
 
 			file << "</sprite>\n\n";

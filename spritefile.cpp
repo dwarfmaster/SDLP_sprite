@@ -248,6 +248,14 @@ namespace sdl
 		return true;
 	}
 
+	bool SpriteFile::changeSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp)
+	{
+		if(!exist(id))
+			return false;
+
+		return changeSprite(id, groups, hotp, m_sprites[id].rect);
+	}
+
 	bool SpriteFile::addSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const AABB& rect)
 	{
 		if(exist(id))
@@ -309,6 +317,11 @@ namespace sdl
 		}
 
 		return true;
+	}
+
+	bool SpriteFile::save() const
+	{
+		return save(m_path);
 	}
 
 };

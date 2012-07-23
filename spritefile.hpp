@@ -44,9 +44,11 @@ namespace sdl
 			std::vector<std::string> listIds() const;
 
 			bool changeSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const AABB& rect);
+			bool changeSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp); // Utilise le rect enregistré
 			bool addSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const AABB& rect);
 			bool deleteSprite(std::string id);
 			bool save(path_t path) const;
+			bool save() const; // Sauvegarde avec le chemin enregistré
 
 		private:
 			path_t m_path;

@@ -270,7 +270,7 @@ namespace sdl
 		return true;
 	}
 
-	bool SpriteFile::save(path_t path)
+	bool SpriteFile::save(path_t path) const
 	{
 		boost::filesystem::ofstream file(path);
 		if(!file)
@@ -279,7 +279,7 @@ namespace sdl
 		file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\n";
 		file << "<image path=\"" << m_path.string() << "\" />\n\n";
 
-		for(sprite_iterator it = m_sprites.begin(); it != m_sprites.end(); ++it)
+		for(csprite_iterator it = m_sprites.begin(); it != m_sprites.end(); ++it)
 		{
 			file << "<sprite id=\"" << it->first 
 				<< "\" x=\"" << itoa(it->second.rect->x)
@@ -289,7 +289,7 @@ namespace sdl
 				<< "\" >\n";
 			file << "\t<hotpoint x=\"" << itoa(it->second.hotp.x) << "\" y=\"" << itoa(it->second.hotp.y) << "\" />\n\n";
 
-			for(std::map<std::string,gaabb>::iterator git = it->second.gaabbs.begin(); git != it->second.gaabbs.end(); ++git)
+			for(std::map<std::string,gaabb>::const_iterator git = it->second.gaabbs.begin(); git != it->second.gaabbs.end(); ++git)
 			{
 				file << "\t<gaabb id=\"" << git->first << "\" priority=\"" << itoa(git->second.priority) << "\" >\n";
 

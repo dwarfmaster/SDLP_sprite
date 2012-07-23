@@ -5,11 +5,6 @@ namespace sdl
 	ASprite::ASprite()
 	{}
 
-	ASprite::ASprite(ASprite::path_t path)
-	{
-		this->load(path);
-	}
-
 	ASprite::ASprite(const ASprite& cp)
 	{
 		this->set(cp);
@@ -41,52 +36,6 @@ namespace sdl
 
 		m_hotPoint = hotp;
 		m_img = img;
-	}
-
-	bool ASprite::load(ASprite::path_t path)
-	{
-		TiXmlDocument file(path.string());
-		if(!file.LoadFile())
-			return false;
-
-		// On récupère le node image
-		TiXmlElement* elem = file.FirstChildElement("image");
-		if(elem == NULL )
-			return false;
-
-		// On charge l'image
-		if(!parseImage(elem))
-			return false;
-
-		// On récupère le node hotpoint
-		elem = file.FirstChildElement("hotpoint");
-		if(elem == NULL) 
-			return false;
-
-		// On en récupère la position
-		std::string str(elem->Attribute("x"));
-		if(str.empty())
-			return false;
-		m_hotPoint.x = sdl::atoi(str);
-		str = elem->Attribute("y");
-		if(str.empty())
-			return false;
-		m_hotPoint.y = sdl::atoi(str);
-
-		// On récupère les SAABBs
-		elem = file.FirstChildElement("gaabb");
-		while(elem)
-		{
-			this->parseGAABB(elem);
-			elem = elem->NextSiblingElement("gaabb");
-		}
-
-		std::vector<AABB> globals;
-		for(group_iterator it = m_groups.begin(); it != m_groups.end(); ++it)
-			globals.push_back(it->second.global);
-		m_global.englobe(globals);
-
-		return true;
 	}
 
 	void ASprite::clear()

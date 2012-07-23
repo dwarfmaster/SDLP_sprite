@@ -33,13 +33,11 @@ namespace sdl
 			friend SpriteEditor;
 
 			ASprite();
-			ASprite(path_t path); // charge un fichier .sprite // TODO à supprimer
 			ASprite(const ASprite& cp);
 			ASprite(const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const boost::shared_ptr<SDL_Surface>& img);
 
 			void set(const ASprite& cp);
 			void set(const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const boost::shared_ptr<SDL_Surface>& img);
-			bool load(path_t path); // TODO à supprimer
 			void clear();
 
 			ASprite& operator=(const ASprite& cp);

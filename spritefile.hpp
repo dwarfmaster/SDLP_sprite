@@ -9,6 +9,7 @@
 #include <limits>
 #include <boost/shared_ptr.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <tinyxml.h>
 #include <SDL/SDL_image.h>
@@ -41,6 +42,11 @@ namespace sdl
 			bool exist(std::string id) const;
 
 			std::vector<std::string> listIds() const;
+
+			bool changeSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const AABB& rect);
+			bool addSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const AABB& rect);
+			bool deleteSprite(std::string id);
+			bool save(path_t path);
 
 		private:
 			path_t m_path;

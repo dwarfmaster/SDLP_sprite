@@ -236,5 +236,80 @@ namespace sdl
 			return false;
 	}
 
+	bool SpriteFile::changeSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const AABB& rect)
+	{
+		if(!exist(id))
+			return false;
+
+		m_sprites[id].gaabbs = groups;
+		m_sprites[id].hotp = hotp;
+		m_sprites[id].rect = rect;
+
+		return true;
+	}
+
+	bool SpriteFile::addSprite(std::string id, const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const AABB& rect)
+	{
+		if(exist(id))
+			return false;
+
+		m_sprites[id].gaabbs = groups;
+		m_sprites[id].hotp = hotp;
+		m_sprites[id].rect = rect;
+
+		return true;
+	}
+
+	bool SpriteFile::deleteSprite(std::string id)
+	{
+		if(!exist(id))
+			return false;
+
+		m_sprites.erase(id);
+
+		return true;
+	}
+
+	bool SpriteFile::save(path_t path)
+	{
+		boost::filesystem::ofstream file(path);
+		if(!file)
+			return false;
+
+		file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\n";
+		file << "<image path=\"" << m_path.string() << "\" />\n\n";
+
+		for(sprite_iterator it = m_sprites.begin(); it != m_sprites.end(); ++it)
+		{
+			file << "<sprite id=\"" << it->first 
+				<< "\" x=\"" << itoa(it->second.rect->x)
+				<< "\" y=\"" << itoa(it->second.rect->y)
+				<< "\" w=\"" << itoa(it->second.rect->w)
+				<< "\" h=\"" << itoa(it->second.rect->h)
+				<< "\" >\n";
+			file << "\t<hotpoint x=\"" << itoa(it->second.hotp.x) << "\" y=\"" << itoa(it->second.hotp.y) << "\" />\n\n";
+
+			for(std::map<std::string,gaabb>::iterator git = it->second.gaabbs.begin(); git != it->second.gaabbs.end(); ++git)
+			{
+				file << "\t<gaabb id=\"" << git->first << "\" priority=\"" << itoa(git->second.priority) << "\" >\n";
+
+				for(size_t i=0; i < git->second.saabbs.size(); ++i)
+				{
+					file << "\t\t<saabb x=\"" << itoa(git->second.saabbs[i]->x)
+						<< "\" y=\"" << itoa(git->second.saabbs[i]->y)
+						<< "\" w=\"" << itoa(git->second.saabbs[i]->w)
+						<< "\" h=\"" << itoa(git->second.saabbs[i]->h)
+						<< "\" />\n";
+				}
+
+				file << "</gaabb>\n\n";
+			}
+
+			file << "</sprite>\n\n";
+		}
+
+		return true;
+	}
+
 };
 

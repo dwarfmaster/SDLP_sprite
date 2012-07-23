@@ -44,16 +44,16 @@ void Editor::load(path_t path, std::string id)
 	if( SDL_Init(SDL_INIT_VIDEO) < 0 )
 		throw std::string("Erreur au chargement de la lib SDL.");
 
+	m_icon = IMG_Load("./icon.png");
+	if(m_icon == NULL)
+		throw std::string("Erreur au chargement de l'icone.");
+
 	SDL_WM_SetIcon(m_icon, NULL);
 	SDL_WM_SetCaption("SDLP_Sprite Editor", NULL);
 
 	ecran = SDL_SetVideoMode(800, 600, 24, SDL_HWSURFACE | SDL_DOUBLEBUF); // SDL_RESIZABLE
 	if( ecran == NULL )
 		throw std::string("Erreur à l'ouverture de la fenêtre.");
-
-	m_icon = IMG_Load("./icon.png");
-	if(m_icon == NULL)
-		throw std::string("Erreur au chargement de l'icone.");
 
 	SDL_Rect msize = maxSizeScreen();
 	SDL_EnableUNICODE(1);

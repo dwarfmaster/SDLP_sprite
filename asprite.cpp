@@ -15,6 +15,11 @@ namespace sdl
 		this->set(cp);
 	}
 
+	ASprite::ASprite(const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const boost::shared_ptr<SDL_Surface>& img)
+	{
+		this->set(groups, hotp, img);
+	}
+
 	void ASprite::set(const ASprite& cp)
 	{
 		m_groups = cp.m_groups;
@@ -22,6 +27,20 @@ namespace sdl
 		m_img = cp.m_img;
 		m_imgPath = cp.m_imgPath;
 		m_global = cp.m_global;
+	}
+
+	void ASprite::set(const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const boost::shared_ptr<SDL_Surface>& img)
+	{
+		std::vector<AABB> globals;
+		for(std::map<std::string, gaabb>::const_iterator it = groups.begin(); it != groups.end(); ++it)
+		{
+			m_groups[it->first] = fromGaabb(it->second);
+			globals.push_back(m_groups[it->first].global);
+		}
+		m_global.englobe(globals);
+
+		m_hotPoint = hotp;
+		m_img = img;
 	}
 
 	bool ASprite::load(ASprite::path_t path)
@@ -376,6 +395,16 @@ namespace sdl
 		}
 
 		return vec;
+	}
+
+	ASprite::GAABB ASprite::fromGaabb(const gaabb& cp)
+	{
+		GAABB gaabb;
+		gaabb.priority = cp.priority;
+		gaabb.aabbs = cp.saabbs;
+		gaabb.global.englobe( gaabb.aabbs );
+
+		return gaabb;
 	}
 };
 

@@ -16,21 +16,30 @@
 
 namespace sdl
 {
+	struct gaabb
+	{
+		std::vector<sdl::AABB> saabbs;
+		unsigned int priority;
+	};
 
 	class SpriteEditor;
 
 	class ASprite
 	{
+		struct GAABB;
+
 		public:
 			typedef boost::filesystem::path path_t;
 			friend SpriteEditor;
 
 			ASprite();
-			ASprite(path_t path); // charge un fichier .sprite
+			ASprite(path_t path); // charge un fichier .sprite // TODO à supprimer
 			ASprite(const ASprite& cp);
+			ASprite(const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const boost::shared_ptr<SDL_Surface>& img);
 
 			void set(const ASprite& cp);
-			bool load(path_t path);
+			void set(const std::map<std::string, gaabb>& groups, const Pointsi& hotp, const boost::shared_ptr<SDL_Surface>& img);
+			bool load(path_t path); // TODO à supprimer
 			void clear();
 
 			ASprite& operator=(const ASprite& cp);
@@ -72,11 +81,12 @@ namespace sdl
 
 			boost::shared_ptr<SDL_Surface> m_img;
 
-			path_t m_imgPath; // Variable interne pour SpriteEditor
-			AABB m_rect; // Idem
+			path_t m_imgPath; // Variable interne pour SpriteEditor // TODO à supprimer
+			AABB m_rect; // Idem // TODO à supprimer
 
-			bool parseImage(TiXmlElement* image);
-			void parseGAABB(TiXmlElement* gaabb);
+			bool parseImage(TiXmlElement* image); // TODO à supprimer
+			void parseGAABB(TiXmlElement* gaabb); // TODO à supprimer
+			GAABB fromGaabb(const gaabb& cp);
 	};
 };
 

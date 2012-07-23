@@ -16,12 +16,12 @@ namespace sdl
 			SpriteEditor();
 			SpriteEditor(const ASprite& sprite); // TODO à supprimer
 			SpriteEditor(const SpriteEditor& cp);
-			SpriteEditor(const SpriteFile& file, std::string id); // TODO à faire
+			SpriteEditor(SpriteFile* file, std::string id); // TODO à faire
 			~SpriteEditor();
 
-			SpriteEditor& set(const SpriteEditor& cp);
+			SpriteEditor& set(const SpriteEditor& cp); // TODO à modifier
 			SpriteEditor& set(const ASprite& sprite); // TODO à supprimer
-			SpriteEditor& set(const SpriteFile& file, std::string id); // TODO à faire
+			SpriteEditor& set(SpriteFile* file, std::string id); // TODO à faire
 			SpriteEditor& clear();
 
 			SpriteEditor& operator=(const SpriteEditor& cp);
@@ -67,7 +67,7 @@ namespace sdl
 			ASprite tmpSprite() const; // Retourne la Sprite en construction : non utilisable mais permet d'avoir des infos
 			ASprite* operator->(); // Idem, permet un accès plus rapide
 
-			bool save(const ASprite::path_t& path) const; // TODO à modifier
+			bool save(const ASprite::path_t& path) const;
 			ASprite create() const;
 
 		private:
@@ -80,6 +80,9 @@ namespace sdl
 			AABB m_rect;
 			SDL_Surface* m_total;
 			bool toFree;
+
+			SpriteFile* m_file;
+			std::string m_id;
 	};
 };
 

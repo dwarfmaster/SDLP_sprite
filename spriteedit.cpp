@@ -400,37 +400,15 @@ namespace sdl
 
 	bool SpriteEditor::save(const ASprite::path_t& path) const
 	{
-		boost::filesystem::ofstream file(path);
-		if(!file)
-			return false;
-
-		file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\n";
-
-		if(m_path.empty())
-			return false;
-		file << "<image>\n";
-		file << "\t<path>" << m_path.string() << "</path>\n";
-		if(m_rect->w != 0
-				&& m_rect->h != 0)
-			file << "<aabb x=\"" << itoa(m_rect->x) << "\" y=\"" << itoa(m_rect->y) << "\" w=\"" << itoa(m_rect->w) << "\" h=\"" << itoa(m_rect->h) << "\" />\n";
-		file << "</image>\n";
-
-		file << "<hotpoint x=\"" << itoa(m_edit.m_hotPoint.x) << "\" y=\"" << itoa(m_edit.m_hotPoint.y) << "\" />\n\n";
-
-		std::vector<std::string> groups = m_edit.groups();
-		for(size_t i=0; i<groups.size(); ++i)
+		std::map<std::string, gaabb> groups;
+		for(ASprite::c_group_iterator it = m_edit.m_groups.begin(); it != m_edit.m_groups.end(); ++it)
 		{
-			ASprite::GAABB gaabb = m_edit.m_groups.find(groups[i])->second;
-			file << "<gaabb id=\"" << groups[i] << "\" priority=\"" << itoa(gaabb.priority) << "\">\n";
-
-			std::vector<AABB> aabbs = gaabb.aabbs;
-			for(size_t j=0; j<aabbs.size(); ++j)
-				file << "\t<saabb x=\"" << itoa(aabbs[j]->x) << "\" y=\"" << itoa(aabbs[j]->y) << "\" w=\"" << itoa(aabbs[j]->w) << "\" h=\"" << itoa(aabbs[j]->h) << "\" />\n";
-
-			file << "</gaabb>\n\n";
+			groups[it->first].saabbs = it->second.aabbs;
+			groups[it->first].priority = it->second.priority;
 		}
 
-		return true;
+		m_file->changeSprite(m_id, groups, m_edit.m_hotPoint, m_rect);
+		return m_file->save(path);
 	}
 
 	ASprite SpriteEditor::create() const

@@ -8,7 +8,7 @@ class Creator;
 class CreatorArea : public gcn::ScrollArea
 {
 	public:
-		CreatorArea(Creator* creat);
+		CreatorArea(Creator* creat, gcn::Icon* img);
 
 		virtual void mouseClicked(gcn::MouseEvent& event);
 

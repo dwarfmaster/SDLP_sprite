@@ -1,8 +1,8 @@
 #include "creatorArea.hpp"
 #include "creator.hpp"
 
-CreatorArea::CreatorArea(Creator* creat)
-	: ScrollArea(), m_creat(creat)
+CreatorArea::CreatorArea(Creator* creat, gcn::Icon* img)
+	: ScrollArea(img), m_creat(creat)
 {}
 
 void CreatorArea::mouseClicked(gcn::MouseEvent& event)
@@ -46,6 +46,7 @@ void CreatorArea::mouseClicked(gcn::MouseEvent& event)
 
 		sprite.set(topleft, bottomright);
 		m_creat->changeSprite(sprite);
+		m_creat->update();
 	}
 
 	ScrollArea::mouseClicked(event);

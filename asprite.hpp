@@ -79,11 +79,6 @@ namespace sdl
 
 			boost::shared_ptr<SDL_Surface> m_img;
 
-			path_t m_imgPath; // Variable interne pour SpriteEditor // TODO à supprimer
-			AABB m_rect; // Idem // TODO à supprimer
-
-			bool parseImage(TiXmlElement* image); // TODO à supprimer
-			void parseGAABB(TiXmlElement* gaabb); // TODO à supprimer
 			GAABB fromGaabb(const gaabb& cp);
 	};
 };

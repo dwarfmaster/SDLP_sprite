@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<anim time="1000" >
+	<!-- time est en millisecondes, c'est la durée entre deux sprites -->
+	<sprite nb="1" id="coup" path="example.sprite:default" />
+	<sprite nb="2" id="salut" path="frame2.sprite:classe" />
+	<!-- le nb sert à savoir dans quel ordre jouer les sprites, s'il n'est pas précisé, ou si deux ont le même, ils seront dans un ordre indéterminé -->
+	<!-- l'id sert à retrouver l'image rapidement, et est facultatif -->
+	<!-- le path doit être rentré de la façon suivante : path="chemin_vert_le_sprite:l-id_du_sprite_a_charger" -->
+</anim>
+

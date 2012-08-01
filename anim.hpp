@@ -41,17 +41,19 @@ namespace sdl
 			unsigned int time() const; // Retourne la durée totale de l'animation
 			unsigned int defaultTime() const;
 
-			void changeSprite(const std::string& frame, ASprite* nsprite, bool tofree=false);
-			void changeTime(const std::string& frame, unsigned int ntime);
-			void reorder(const std::vector<std::string>& norder); // Change l'ordre selon le vector, une entrée non existante sera ignorée et les entrées non précisées seront mises à la fin
-			void addFrame(unsigned int pos, const std::string& id, ASprite* sprite, unsigned int time=0, bool tofree=false); // Si time = 0, alors la valeur par défaut sera appliquée; les frames suivantes seront décalées
-			void deleteFrame(const std::string& name);
+			bool changeSprite(const std::string& frame, ASprite* nsprite, bool tofree=false);
+			bool changeTime(const std::string& frame, unsigned int ntime);
+			bool reorder(const std::vector<std::string>& norder); // Toutes les frames doivent y être, sans aucune supplémentaire
+			bool addFrame(unsigned int pos, const std::string& name, ASprite* sprite, unsigned int time=0, bool tofree=false); // Si time = 0, alors la valeur par défaut sera appliquée; les frames suivantes seront décalées
+			bool deleteFrame(const std::string& name);
 
 			bool exist(const std::string& frame) const;
 
 			ASprite* update(); // Va mettre à jour m_lastTime, m_act et m_timeStay
-			ASprite* getSprite() const;
-			operator ASprite*() const;
+			ASprite* getSprite();
+			const ASprite* getSprite() const;
+			operator ASprite*();
+			operator const ASprite*() const;
 			operator ASprite() const;
 			ASprite* operator->();
 			const ASprite* operator->() const;
@@ -84,17 +86,17 @@ namespace sdl
 
 			struct frame
 			{
-				std::string id;
+				std::string name;
 				ASprite* sprite;
 				bool toFree;
 				unsigned int time; // Durée de la frame
 			};
-			std::list<frame> m_frames;
+			std::vector<frame> m_frames; // Il peut y avoir un ajout au milieu, mais l'accès rapide est plus important
 			bool m_loaded;
 			unsigned int m_default; // Time
 
-			typedef std::list<frame>::iterator frame_iterator;
-			typedef std::list<frame>::const_iterator cframe_iterator;
+			typedef std::vector<frame>::iterator frame_iterator;
+			typedef std::vector<frame>::const_iterator cframe_iterator;
 	};
 };
 

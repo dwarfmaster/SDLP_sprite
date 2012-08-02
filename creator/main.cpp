@@ -4,7 +4,7 @@ int main(int argc, char *argv[])
 {
 	if(argc < 2)
 	{
-		std::cerr<<"Absence d'argument."<<std::endl;
+		std::cerr << "Usage : "<< argv[0] << " /path/to/image" << std::endl;
 		return 1;
 	}
 	boost::filesystem::path path(argv[1]);

@@ -2,11 +2,22 @@
 
 <anim time="1000" >
 	<!-- time est en millisecondes, c'est la durée par défaut entre deux sprites (si non précisée, elle sera de 1000) -->
-	<sprite nb="1" id="coup" path="example.sprite:default" />
-	<sprite nb="2" id="salut" path="frame2.sprite:classe" time="500" />
+	<sprite nb="1" name="coup" path="example.sprite:default" />
+	<sprite nb="2" name="salut" path="frame2.sprite:classe" time="500" />
 	<!-- le nb sert à savoir dans quel ordre jouer les sprites, s'il n'est pas précisé, ou si deux ont le même, ils seront dans un ordre indéterminé -->
-	<!-- l'id sert à retrouver l'image rapidement, et est facultatif -->
+	<!-- le name sert à retrouver l'image rapidement, et est obligatoire -->
 	<!-- le path doit être rentré de la façon suivante : path="chemin_vert_le_sprite:l-id_du_sprite_a_charger" -->
 	<!-- le time est la durée de la frame, si non précisée, la valeur par défaut sera appliquée -->
+
+	<sprite nb="3" id="super sprite" path="/path/to/img.png" x="125" y="236" w="14" h="56">
+		<hotpoint x="125" y="256" />
+		<gaabb id="corp" priority="2">
+			<saabb x="120" y="135" w="25" h="36" />
+			<saabb x="150" y="135" w="25" h="36" />
+			<saabb x="20" y="189" w="25" h="36" />
+			<saabb x="12" y="35" w="256" h="136" />
+		</gaabb>
+	</sprite>
+	<!-- On peux aussi définir les sprites directement dedans -->
 </anim>
 

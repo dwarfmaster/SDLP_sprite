@@ -58,6 +58,7 @@ namespace sdl
 			std::vector<std::string> groups() const;
 			std::vector<std::string> inGroup(const Pointsi& p) const;
 			std::string inUniqueGroup(const Pointsi& p) const;
+			unsigned int priority(std::string id) const;
 
 			// Les groupes du premiers qui sont en colision avec le second
 			std::vector< std::pair<std::string, std::string> > colision(Pointsi pos1, const ASprite& other, Pointsi pos2) const;

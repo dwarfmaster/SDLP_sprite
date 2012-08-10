@@ -57,7 +57,7 @@ namespace sdl
 		{
 			std::string id = elem->Attribute("id");
 			if(!id.empty())
-				parseSprite(elem, &m_sprites[id]);
+				parseSprite(elem, &m_sprites[id], m_img.get());
 
 			elem = elem->NextSiblingElement("sprite");
 		}
@@ -119,10 +119,10 @@ namespace sdl
 		return ids;
 	}
 
-	bool SpriteFile::parseSprite(TiXmlElement* spriten, SpriteFile::sprite* p)
+	bool SpriteFile::parseSprite(TiXmlElement* spriten, SpriteFile::sprite* p, const SDL_Surface* img)
 	{
 		// On récupère le clip rect
-		parseRect(spriten, &p->rect);
+		parseRect(spriten, &p->rect, img);
 
 		// On récupère le node hotpoint
 		TiXmlElement* elem = spriten->FirstChildElement("hotpoint");
@@ -146,14 +146,14 @@ namespace sdl
 		{
 			std::string id = elem->Attribute("id");
 			if(!id.empty())
-				this->parseGAABB(elem, &p->gaabbs[id]);
+				parseGAABB(elem, &p->gaabbs[id]);
 			elem = elem->NextSiblingElement("gaabb");
 		}
 
 		return true;
 	}
 
-	void SpriteFile::parseRect(TiXmlElement* spriten, AABB* p)
+	void SpriteFile::parseRect(TiXmlElement* spriten, AABB* p, const SDL_Surface* img)
 	{
 		int x=0, y=0, w=10, h=10;
 
@@ -162,32 +162,32 @@ namespace sdl
 			x=atoi(str);
 		if(x < 0)
 			x=0;
-		else if( x > m_img->w-10 )
-			x = m_img->w - 10;
+		else if( x > img->w-10 )
+			x = img->w - 10;
 
 		str = spriten->Attribute("y");
 		if(!str.empty())
 			y=atoi(str);
 		if(y < 0)
 			y=0;
-		else if( y > m_img->h-10 )
-			y = m_img->h - 10;
+		else if( y > img->h-10 )
+			y = img->h - 10;
 
 		str = spriten->Attribute("w");
 		if(!str.empty())
 			w=atoi(str);
 		if(w < 10)
 			w=10;
-		else if( x+w > m_img->w )
-			w = m_img->w - x;
+		else if( x+w > img->w )
+			w = img->w - x;
 
 		str = spriten->Attribute("h");
 		if(!str.empty())
 			h=atoi(str);
 		if(h < 10)
 			h=10;
-		else if( y+h > m_img->h )
-			h = m_img->h - y;
+		else if( y+h > img->h )
+			h = img->h - y;
 
 		p->set(makeRect(x, y, w, h));
 	}
@@ -327,5 +327,90 @@ namespace sdl
 		return save(m_path);
 	}
 
+	std::string& operator<<(std::string& str, const std::string& add) // Fonction servant uniquement à faciliter l'écriture de la suivante
+	{
+		str += add;
+		return str;
+	}
+
+	std::string SpriteFile::xmlSprite(const ASprite& sprite, const std::string& id, const AABB& rect)
+	{
+		std::string file;
+
+		file << "<sprite id=\"" << id
+			<< "\" x=\"" << itoa(rect->x)
+			<< "\" y=\"" << itoa(rect->y)
+			<< "\" w=\"" << itoa(rect->w)
+			<< "\" h=\"" << itoa(rect->h)
+			<< "\" >\n";
+		file << "\t<hotpoint x=\"" << itoa(sprite.hotPoint().x) << "\" y=\"" << itoa(sprite.hotPoint().y) << "\" />\n\n";
+
+		std::vector<std::string> groups = sprite.groups();
+		for(size_t i=0; i < groups.size(); ++i)
+		{
+			file << "\t<gaabb id=\"" << groups[i] << "\" priority=\"" << itoa(sprite.priority(groups[i])) << "\" >\n";
+
+			std::vector<AABB> saabbs = sprite[ groups[i] ];
+			for(size_t j=0; j < saabbs.size(); ++j)
+			{
+				file << "\t\t<saabb x=\"" << itoa(saabbs[i]->x)
+					<< "\" y=\"" << itoa(saabbs[i]->y)
+					<< "\" w=\"" << itoa(saabbs[i]->w)
+					<< "\" h=\"" << itoa(saabbs[i]->h)
+					<< "\" />\n";
+			}
+
+			file << "\t</gaabb>\n\n";
+		}
+
+		return file;
+	}
+
+	ASprite* SpriteFile::spriteXml(TiXmlElement* sprite, const path_t& img)
+	{
+		if(!boost::filesystem::exists(img))
+			return NULL;
+
+		SDL_Surface* surf = IMG_Load(img.string().c_str());
+		if(surf == NULL)
+			return NULL;
+
+		ASprite* asprite = spriteXml(sprite, surf);
+
+		SDL_FreeSurface(surf);
+		return asprite;
+	}
+
+	ASprite* SpriteFile::spriteXml(TiXmlElement* sprite, SDL_Surface* img)
+	{
+		// Création et chargement de la sprite
+		SpriteFile::sprite asprite;
+		parseSprite(sprite, &asprite, img);
+
+		// Récupération du rect
+		SDL_Rect rect = asprite.rect.rect();
+
+		// Création de la surface
+		SDL_Surface* surf = SDL_CreateRGBSurface(SDL_HWSURFACE, rect.w, rect.h, 24, 0, 0, 0, 0);
+		if(surf == NULL)
+			return NULL;
+
+		if(SDL_GetVideoSurface() != NULL) // Adaptation à la surface vidéo
+		{
+			SDL_Surface* tmp = SDL_DisplayFormatAlpha(surf);
+			if(tmp == NULL)
+				return NULL;
+			else
+				SDL_FreeSurface(surf);
+			surf = tmp;
+		}
+
+		SDL_BlitSurface(img, &rect, surf, NULL);
+
+		Liberator lib;
+		boost::shared_ptr<SDL_Surface> nimg(surf, lib);
+
+		return new ASprite( asprite.gaabbs, asprite.hotp, nimg );
+	}
 };
 

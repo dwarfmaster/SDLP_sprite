@@ -106,6 +106,14 @@ namespace sdl
 		return this->saabb(id);
 	}
 
+	unsigned int ASprite::priority(std::string id) const
+	{
+		if( !exist(id) )
+			return 0;
+		else
+			return m_groups.find(id)->second.priority;
+	}
+
 	bool ASprite::exist(std::string id) const
 	{
 		return m_groups.find(id) != m_groups.end();

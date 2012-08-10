@@ -50,6 +50,10 @@ namespace sdl
 			bool save(path_t path) const;
 			bool save() const; // Sauvegarde avec le chemin enregistré
 
+			static std::string xmlSprite(const ASprite& sprite, const std::string& id, const AABB& rect);
+			static ASprite* spriteXml(TiXmlElement* sprite, const path_t& img); // TODO
+			static ASprite* spriteXml(TiXmlElement* sprite, SDL_Surface* img); // La surface ne sera pas modifiée
+
 		private:
 			path_t m_path;
 			boost::shared_ptr<SDL_Surface> m_img;
@@ -63,9 +67,9 @@ namespace sdl
 			};
 			std::map<std::string, sprite> m_sprites;
 
-			bool parseSprite(TiXmlElement* spriten, sprite* p);
-			void parseRect(TiXmlElement* spriten, AABB* p);
-			bool parseGAABB(TiXmlElement* gaabbn, gaabb* p);
+			static bool parseSprite(TiXmlElement* spriten, sprite* p, const SDL_Surface* img); // Ces trois fonctions peuvent être utlisées par spriteXml
+			static void parseRect(TiXmlElement* spriten, AABB* p, const SDL_Surface* img);
+			static bool parseGAABB(TiXmlElement* gaabbn, gaabb* p);
 	};
 };
 

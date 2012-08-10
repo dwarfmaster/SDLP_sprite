@@ -6,7 +6,7 @@
 	<sprite nb="2" name="salut" path="frame2.sprite:classe" time="500" />
 	<!-- le nb sert à savoir dans quel ordre jouer les sprites, s'il n'est pas précisé, ou si deux ont le même, ils seront dans un ordre indéterminé -->
 	<!-- le name sert à retrouver l'image rapidement, et est obligatoire -->
-	<!-- le path doit être rentré de la façon suivante : path="chemin_vert_le_sprite:l-id_du_sprite_a_charger" -->
+	<!-- le path doit être rentré de la façon suivante : path="chemin_vert_le_sprite:l-id_du_sprite_a_charger", s'il n'y a pas de ':', on chargera le sprite comme s'il était défini ici (voir ci-dessous) -->
 	<!-- le time est la durée de la frame, si non précisée, la valeur par défaut sera appliquée -->
 
 	<sprite nb="3" id="super sprite" path="/path/to/img.png" x="125" y="236" w="14" h="56">

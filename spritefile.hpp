@@ -52,8 +52,8 @@ namespace sdl
 			bool save() const; // Sauvegarde avec le chemin enregistré
 
 			static std::string xmlSprite(const ASprite& sprite, const std::string& id, const AABB& rect, const std::string& toadd="", const std::string& begin="");
-			static ASprite* spriteXml(TiXmlElement* sprite, const path_t& img);
-			static ASprite* spriteXml(TiXmlElement* sprite, SDL_Surface* img); // La surface ne sera pas modifiée
+			static ASprite* spriteXml(TiXmlElement* sprite, const path_t& img, AABB* rect = NULL);
+			static ASprite* spriteXml(TiXmlElement* sprite, SDL_Surface* img, AABB* arect = NULL); // La surface ne sera pas modifiée
 
 		private:
 			path_t m_path;

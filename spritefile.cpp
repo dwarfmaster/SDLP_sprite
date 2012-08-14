@@ -367,7 +367,7 @@ namespace sdl
 		return file;
 	}
 
-	ASprite* SpriteFile::spriteXml(TiXmlElement* sprite, const path_t& img)
+	ASprite* SpriteFile::spriteXml(TiXmlElement* sprite, const path_t& img, AABB* rect)
 	{
 		if(!boost::filesystem::exists(img))
 			return NULL;
@@ -376,19 +376,21 @@ namespace sdl
 		if(surf == NULL)
 			return NULL;
 
-		ASprite* asprite = spriteXml(sprite, surf);
+		ASprite* asprite = spriteXml(sprite, surf, rect);
 
 		SDL_FreeSurface(surf);
 		return asprite;
 	}
 
-	ASprite* SpriteFile::spriteXml(TiXmlElement* sprite, SDL_Surface* img)
+	ASprite* SpriteFile::spriteXml(TiXmlElement* sprite, SDL_Surface* img, AABB* arect)
 	{
 		// Création et chargement de la sprite
 		SpriteFile::sprite asprite;
 		parseSprite(sprite, &asprite, img);
 
 		// Récupération du rect
+		if( arect != NULL )
+			*arect = asprite.rect;
 		SDL_Rect rect = asprite.rect.rect();
 
 		// Création de la surface

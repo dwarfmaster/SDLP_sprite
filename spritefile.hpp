@@ -38,6 +38,7 @@ namespace sdl
 			SpriteFile& operator=(const SpriteFile& cp);
 
 			ASprite getSprite(std::string id);
+			AABB getRect(std::string id) const;
 			ASprite operator[](std::string id);
 			bool exist(std::string id) const;
 

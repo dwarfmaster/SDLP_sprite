@@ -413,5 +413,13 @@ namespace sdl
 
 		return new ASprite( asprite.gaabbs, asprite.hotp, nimg );
 	}
+
+	AABB SpriteFile::getRect(std::string id) const
+	{
+		if( exist(id) )
+			return m_sprites.find(id)->second.rect;
+		else
+			return makeRect(0, 0, 0, 0);
+	}
 };
 

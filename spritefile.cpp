@@ -333,34 +333,35 @@ namespace sdl
 		return str;
 	}
 
-	std::string SpriteFile::xmlSprite(const ASprite& sprite, const std::string& id, const AABB& rect)
+	std::string SpriteFile::xmlSprite(const ASprite& sprite, const std::string& id, const AABB& rect, const std::string& toadd, const std::string& begin)
 	{
 		std::string file;
 
-		file << "<sprite id=\"" << id
+		file << begin << "<sprite id=\"" << id
 			<< "\" x=\"" << itoa(rect->x)
 			<< "\" y=\"" << itoa(rect->y)
 			<< "\" w=\"" << itoa(rect->w)
 			<< "\" h=\"" << itoa(rect->h)
+			<< toadd
 			<< "\" >\n";
-		file << "\t<hotpoint x=\"" << itoa(sprite.hotPoint().x) << "\" y=\"" << itoa(sprite.hotPoint().y) << "\" />\n\n";
+		file << begin << "\t<hotpoint x=\"" << itoa(sprite.hotPoint().x) << "\" y=\"" << itoa(sprite.hotPoint().y) << "\" />\n\n";
 
 		std::vector<std::string> groups = sprite.groups();
 		for(size_t i=0; i < groups.size(); ++i)
 		{
-			file << "\t<gaabb id=\"" << groups[i] << "\" priority=\"" << itoa(sprite.priority(groups[i])) << "\" >\n";
+			file << begin << "\t<gaabb id=\"" << groups[i] << "\" priority=\"" << itoa(sprite.priority(groups[i])) << "\" >\n";
 
 			std::vector<AABB> saabbs = sprite[ groups[i] ];
 			for(size_t j=0; j < saabbs.size(); ++j)
 			{
-				file << "\t\t<saabb x=\"" << itoa(saabbs[i]->x)
+				file << begin << "\t\t<saabb x=\"" << itoa(saabbs[i]->x)
 					<< "\" y=\"" << itoa(saabbs[i]->y)
 					<< "\" w=\"" << itoa(saabbs[i]->w)
 					<< "\" h=\"" << itoa(saabbs[i]->h)
 					<< "\" />\n";
 			}
 
-			file << "\t</gaabb>\n\n";
+			file << begin << "\t</gaabb>\n\n";
 		}
 
 		return file;

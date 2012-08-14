@@ -591,7 +591,7 @@ namespace sdl
 			}
 
 end:
-			elem->NextSiblingElement("sprite");
+			elem = elem->NextSiblingElement("sprite");
 		}
 
 		std::map<std::string, SpriteFile*> files;

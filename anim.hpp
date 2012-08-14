@@ -2,6 +2,7 @@
 #define DEF_SDLP_ANIM
 
 #include "asprite.hpp"
+#include "spritefile.hpp"
 
 #include <vector>
 #include <string>
@@ -33,18 +34,18 @@ namespace sdl
 
 			std::vector<std::string> frames() const;
 			size_t nbFrames() const;
-			size_t idFromName(const std::string& name) const;
+			size_t idFromName(const std::string& name) const; // Renvoie nbframes si name n'existe pas
 			std::string nameFromId(size_t id) const;
 			ASprite* sprite(const std::string& frame) const;
 			ASprite* operator[](const std::string& frame) const;
-			unsigned int time(const std::string& frame) const;
-			unsigned int time() const; // Retourne la durée totale de l'animation
-			unsigned int defaultTime() const;
+			Uint32 time(const std::string& frame) const;
+			Uint32 time() const; // Retourne la durée totale de l'animation
+			Uint32 defaultTime() const;
 
 			bool changeSprite(const std::string& frame, ASprite* nsprite, bool tofree=false);
-			bool changeTime(const std::string& frame, unsigned int ntime);
+			bool changeTime(const std::string& frame, Uint32 ntime);
 			bool reorder(const std::vector<std::string>& norder); // Toutes les frames doivent y être, sans aucune supplémentaire
-			bool addFrame(unsigned int pos, const std::string& name, ASprite* sprite, unsigned int time=0, bool tofree=false); // Si time = 0, alors la valeur par défaut sera appliquée; les frames suivantes seront décalées
+			bool addFrame(size_t pos, const std::string& name, ASprite* sprite,  Uint32 time=0, bool tofree=false, AABB rect = makeRect(0,0,0,0), path_t path = ""); // Si time = 0, alors la valeur par défaut sera appliquée; les frames suivantes seront décalées, le rect et le path servent juste pour la sauvegarde
 			bool deleteFrame(const std::string& name);
 
 			bool exist(const std::string& frame) const;
@@ -89,11 +90,17 @@ namespace sdl
 				std::string name;
 				ASprite* sprite;
 				bool toFree;
-				unsigned int time; // Durée de la frame
+				Uint32 time; // Durée de la frame
+
+				std::string path; // Utilisé uniquement pour la sauvegarde
+				std::string id; // Idem
+				AABB rect; // Idem
 			};
 			std::vector<frame> m_frames; // Il peut y avoir un ajout au milieu, mais l'accès rapide est plus important
 			bool m_loaded;
-			unsigned int m_default; // Time
+			Uint32 m_default; // Time
+
+			void parseSprites(std::vector<frame>* sprites, TiXmlElement* elem);
 
 			typedef std::vector<frame>::iterator frame_iterator;
 			typedef std::vector<frame>::const_iterator cframe_iterator;

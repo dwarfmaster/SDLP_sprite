@@ -560,12 +560,12 @@ namespace sdl
 
 				fr.nb = atoi( elem->Attribute("nb") );
 
-				str = elem->Attribute("time");
-				if(str.empty())
+				std::string tmp = elem->Attribute("time");
+				if(tmp.empty())
 					fr.time = m_default;
 				else
 				{
-					fr.time = atoi(str);
+					fr.time = atoi(tmp);
 					if(fr.time == 0)
 						fr.time = m_default;
 				}

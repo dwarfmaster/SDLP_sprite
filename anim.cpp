@@ -595,13 +595,20 @@ end:
 		}
 
 		std::map<std::string, SpriteFile*> files;
+		std::list<ParsedFrame>::iterator toera = pf.end();
 		for(std::list<ParsedFrame>::iterator it = pf.begin(); it != pf.end(); ++it) // On charge les frames
 		{
+			if( toera != pf.end() )
+			{
+				pf.erase(toera);
+				toera = pf.end();
+			}
+
 			if( it->id.empty() )
 			{
 				it->sprite = SpriteFile::spriteXml(it->elem, it->surf, &it->rect);
-				if( it->sprite== NULL ) // Si on n'arrive pas à le charger, on le supprime
-					pf.erase(it);
+				if( it->sprite == NULL ) // Si on n'arrive pas à le charger, on le supprime
+					toera = it;
 			}
 			else
 			{
@@ -621,16 +628,19 @@ end:
 					file = files[it->path.string()]; // Utilisation d'un SpriteFile déjà chargé
 
 				if( file == NULL ) // Si le fichier est inchargeable, on supprime la frame
-					pf.erase(it);
+					toera = it;
 				else
 				{
 					if( file->exist(it->id) ) // Si cet id existe, on récupère le sprite, sinon, on le supprime
 						it->sprite = new ASprite( file->getSprite(it->id) );
 					else
-						pf.erase(it);
+						toera = it;
 				}
 			}
 		}
+
+		if( toera != pf.end() )
+			pf.erase( toera );
 
 		for(std::map<std::string, SpriteFile*>::iterator it = files.begin(); it != files.end(); ++it) // On libère les SpriteFile
 		{

@@ -44,7 +44,8 @@ void Editor::load(path_t path, std::string id)
 	if( SDL_Init(SDL_INIT_VIDEO) < 0 )
 		throw std::string("Erreur au chargement de la lib SDL.");
 
-	m_icon = IMG_Load("./icon.png");
+	path_t rcpath = std::string(RCDIR) + "/icon.png";
+	m_icon = IMG_Load(rcpath.string().c_str());
 	if(m_icon == NULL)
 		std::cerr << "Erreur au chargement de l'icone." << std::endl; // Erreur non fatale
 	else
@@ -75,7 +76,9 @@ void Editor::load(path_t path, std::string id)
 	// m_top->setDimension(gcn::Rectangle(0, 0, msize.w, msize.h));
 	m_top->setDimension(gcn::Rectangle(0, 0, ecran->w, ecran->h));
 	m_gui->setTop(m_top);
-	m_font = new gcn::ImageFont("font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");
+
+	rcpath = std::string(RCDIR) + "/font.png";
+	m_font = new gcn::ImageFont(rcpath.string(), " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");
 	gcn::Widget::setGlobalFont(m_font);
 
 	loadSpriteEditor(path, id);

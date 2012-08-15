@@ -38,11 +38,13 @@ namespace sdl
 
 		// On récupère le chemin
 		path_t imgpath = elem->Attribute("path");
-		if(imgpath.empty()
-				|| !boost::filesystem::exists(imgpath)
-				|| boost::filesystem::is_directory(imgpath) )
+		path_t filepath = path.parent_path();
+		filepath += "/";
+		m_path = filepath / imgpath;
+		if(m_path.empty()
+				|| !boost::filesystem::exists(m_path)
+				|| boost::filesystem::is_directory(m_path) )
 			return false;
-		m_path = imgpath;
 
 		// On charge l'image
 		SDL_Surface* surf = IMG_Load(m_path.string().c_str());
@@ -363,6 +365,8 @@ namespace sdl
 
 			file << begin << "\t</gaabb>\n\n";
 		}
+
+		file << begin << "</sprite>\n";
 
 		return file;
 	}

@@ -100,7 +100,7 @@ namespace sdl
 			bool m_loaded;
 			Uint32 m_default; // Time
 
-			void parseSprites(std::vector<frame>* sprites, TiXmlElement* elem);
+			void parseSprites(std::vector<frame>* sprites, TiXmlElement* elem, path_t basepath);
 
 			typedef std::vector<frame>::iterator frame_iterator;
 			typedef std::vector<frame>::const_iterator cframe_iterator;

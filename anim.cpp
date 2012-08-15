@@ -65,6 +65,8 @@ namespace sdl
 	bool Anim::load(const path_t& path )
 	{
 		clear();
+		path_t basepath = path.parent_path();
+		basepath += "/";
 
 		// On ouvre le document
 		TiXmlDocument doc(path.string());
@@ -94,7 +96,7 @@ namespace sdl
 
 		// On charge les sprites
 		std::vector<frame> sprites;
-		parseSprites(&sprites, elem);
+		parseSprites(&sprites, elem, basepath);
 		m_frames = sprites;
 
 		return true;
@@ -548,7 +550,7 @@ namespace sdl
 		ASprite* sprite;
 	};
 
-	void Anim::parseSprites(std::vector<frame>* sprites, TiXmlElement* elem)
+	void Anim::parseSprites(std::vector<frame>* sprites, TiXmlElement* elem, path_t basepath)
 	{
 		std::list<ParsedFrame> pf;
 
@@ -593,7 +595,7 @@ namespace sdl
 				if( pos == std::string::npos )
 				{
 					fr.id.clear(); // id vide
-					fr.path = str;
+					fr.path = basepath.string() + str;
 
 					fr.surf = IMG_Load( fr.path.c_str() );
 					if( fr.surf == NULL )
@@ -603,7 +605,7 @@ namespace sdl
 				else
 				{
 					fr.id = str.substr(pos + 1);
-					fr.path = str.substr(0, pos);
+					fr.path = basepath.string() + str.substr(0, pos);
 				}
 
 				pf.push_back(fr);

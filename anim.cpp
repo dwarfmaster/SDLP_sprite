@@ -77,14 +77,19 @@ namespace sdl
 			return false;
 
 		// On trouve le temps par défaut
-		std::string time = elem->Attribute("time");
-		if(time.empty())
+		if( elem->Attribute("time") == NULL )
 			m_default = 1000;
 		else
 		{
-			m_default = atoi(time);
-			if(m_default == 0)
+			std::string time = elem->Attribute("time");
+			if(time.empty())
 				m_default = 1000;
+			else
+			{
+				m_default = atoi(time);
+				if(m_default == 0)
+					m_default = 1000;
+			}
 		}
 
 		// On charge les sprites
@@ -550,24 +555,38 @@ namespace sdl
 		elem = elem->FirstChildElement("sprite"); // On parse l'xml
 		while(elem != NULL)
 		{
-			std::string str = elem->Attribute("path");
-			if(!str.empty())
+			if( elem->Attribute("path") != NULL )
 			{
+				std::string str = elem->Attribute("path");
+				if( str.empty() )
+					goto end;
+
 				ParsedFrame fr;
+
+				if( elem->Attribute("name") == NULL )
+					goto end;
 				fr.name = elem->Attribute("name");
 				if( fr.name.empty() )
 					goto end;
 
-				fr.nb = atoi( elem->Attribute("nb") );
+				if( elem->Attribute("nb") != NULL )
+					fr.nb = atoi( elem->Attribute("nb") );
+				else
+					fr.nb = 0;
 
-				std::string tmp = elem->Attribute("time");
-				if(tmp.empty())
+				if( elem->Attribute("time") == NULL)
 					fr.time = m_default;
 				else
 				{
-					fr.time = atoi(tmp);
-					if(fr.time == 0)
+					std::string tmp = elem->Attribute("time");
+					if(tmp.empty())
 						fr.time = m_default;
+					else
+					{
+						fr.time = atoi(tmp);
+						if(fr.time == 0)
+							fr.time = m_default;
+					}
 				}
 
 				size_t pos = str.find_last_of(':');

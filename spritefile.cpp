@@ -20,12 +20,15 @@ namespace sdl
 	void SpriteFile::clear()
 	{
 		m_path.clear();
+		m_imgPath.clear();
 		m_img.reset();
 		m_sprites.clear();
 	}
 
 	bool SpriteFile::load(const path_t& path)
 	{
+		m_path = path;
+
 		// On ouvre le fichier
 		TiXmlDocument file(path.string());
 		if(!file.LoadFile())
@@ -43,14 +46,14 @@ namespace sdl
 			filepath = "./";
 		else
 			filepath += "/";
-		m_path = filepath / imgpath;
-		if(m_path.empty()
-				|| !boost::filesystem::exists(m_path)
-				|| boost::filesystem::is_directory(m_path) )
+		m_imgPath = filepath / imgpath;
+		if(m_imgPath.empty()
+				|| !boost::filesystem::exists(m_imgPath)
+				|| boost::filesystem::is_directory(m_imgPath) )
 			return false;
 
 		// On charge l'image
-		SDL_Surface* surf = IMG_Load(m_path.string().c_str());
+		SDL_Surface* surf = IMG_Load(m_imgPath.string().c_str());
 		if(surf == NULL)
 			return false;
 		Liberator lib;
@@ -73,6 +76,7 @@ namespace sdl
 	void SpriteFile::set(const SpriteFile& cp)
 	{
 		m_path = cp.m_path;
+		m_imgPath = cp.m_imgPath;
 		m_img = cp.m_img;
 		m_sprites = cp.m_sprites;
 	}
@@ -293,7 +297,7 @@ namespace sdl
 			return false;
 
 		file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n\n";
-		file << "<image path=\"" << m_path.string() << "\" />\n\n";
+		file << "<image path=\"" << m_imgPath.string() << "\" />\n\n";
 
 		for(csprite_iterator it = m_sprites.begin(); it != m_sprites.end(); ++it)
 		{

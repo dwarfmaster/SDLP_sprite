@@ -56,7 +56,8 @@ namespace sdl
 			static ASprite* spriteXml(TiXmlElement* sprite, SDL_Surface* img, AABB* arect = NULL); // La surface ne sera pas modifiée
 
 		private:
-			path_t m_path;
+			path_t m_path; // Chemin enregistré
+			path_t m_imgPath; // Chemin de l'image
 			boost::shared_ptr<SDL_Surface> m_img;
 
 			struct sprite

@@ -66,7 +66,10 @@ namespace sdl
 	{
 		clear();
 		path_t basepath = path.parent_path();
-		basepath += "/";
+		if( basepath.empty() )
+			basepath = "./";
+		else
+			basepath += "/";
 
 		// On ouvre le document
 		TiXmlDocument doc(path.string());

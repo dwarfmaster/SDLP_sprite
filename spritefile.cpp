@@ -39,7 +39,10 @@ namespace sdl
 		// On récupère le chemin
 		path_t imgpath = elem->Attribute("path");
 		path_t filepath = path.parent_path();
-		filepath += "/";
+		if( filepath.empty() )
+			filepath = "./";
+		else
+			filepath += "/";
 		m_path = filepath / imgpath;
 		if(m_path.empty()
 				|| !boost::filesystem::exists(m_path)

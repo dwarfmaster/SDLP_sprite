@@ -47,4 +47,22 @@ mr-proper : uninstall clean
 
 reinstall : uninstall rec install
 
+install-all : install
+	@echo "*** EDITOR ***"
+	cd editor && make install
+	@echo "*** CREATOR ***"
+	cd creator && make install
+
+uninstall-all : uninstall
+	@echo "*** EDITOR ***"
+	cd editor && make uninstall
+	@echo "*** CREATOR ***"
+	cd creator && make uninstall
+
+reinstall-all : reinstall
+	@echo "*** EDITOR ***"
+	cd editor && make reinstall
+	@echo "*** CREATOR ***"
+	cd creator && make reinstall
+
 

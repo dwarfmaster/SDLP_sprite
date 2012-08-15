@@ -59,7 +59,9 @@ void Creator::load(const path_t& img)
 	m_top->setOpaque(true);
 	m_top->setDimension(gcn::Rectangle(0, 0, ecran->w, ecran->h));
 	m_gui->setTop(m_top);
-	m_font = new gcn::ImageFont("font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");
+
+	path_t path = std::string(RCDIR) + "/font.png";
+	m_font = new gcn::ImageFont(path.string(), " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"");
 	gcn::Widget::setGlobalFont(m_font);
 
 	m_path = img;

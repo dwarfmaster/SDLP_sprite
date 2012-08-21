@@ -10,9 +10,7 @@ INCSDIR=$(INCLUDES)/$(NAME)
 PCFILE=$(NAME).pc
 PCDIR=/usr/lib/pkgconfig
 
-all : $(LIB)
-
-$(LIB) :
+all :
 	cd src && make
 
 clean :
@@ -37,6 +35,9 @@ mr-proper : uninstall clean
 
 reinstall : uninstall rec install
 
+tools :
+	cd tools && make
+
 clean-all : clean
 	cd tools && make clean
 
@@ -52,4 +53,14 @@ reinstall-all : reinstall
 	@echo -e "\t***** TOOLS *****"
 	cd tools && make reinstall
 
+doc :
+	cd doc && doxygen Doxyfile
+	firefox doc/html/index.html > /dev/null 2>&1 &
+
+clear-doc :
+	rm -rf doc/html
+	rm -rf doc/man
+	rm -rf doc/latex
+
+.PHONY: doc clear-doc reinstall-all uninstall-all install-all clean-all reinstall mr-proper uninstall install rec clean all tools
 

@@ -1,10 +1,5 @@
-OBJS=asprite.o spriteedit.o spritefile.o anim.o
-NAME=SDLP_sprite
+include param.mk
 
-CXXFLAGS=-Wall -Wextra `sdl-config --cflags` `pkg-config --cflags SDLP_position SDLP_tools SDL_image` -fPIC -fsigned-bitfields -std=gnu++0x -g
-LDFLAGS=-shared
-
-LIB=lib$(NAME).so
 DEST=/home/luc/libs
 VERSION=1.0
 
@@ -17,16 +12,11 @@ PCDIR=/usr/lib/pkgconfig
 
 all : $(LIB)
 
-$(LIB) : $(OBJS)
-	g++ $(CXXFLAGS)    -o $@	$^ $(LDFLAGS)
-	chmod -x $(LIB)
-
-%.o : %.cpp %.hpp
-	g++ $(CXXFLAGS) -c -o $@	$<
+$(LIB) :
+	cd src && make
 
 clean :
-	@touch $(OBJS) $(LIB)
-	@rm -v $(OBJS) $(LIB)
+	cd src && make clean
 
 rec : clean all
 
@@ -34,7 +24,7 @@ install : $(LIB)
 	@cp -v $(LIB) $(DEST)
 	@mkdir $(INCSDIR)
 	@cp -v $(INCFILE) $(INCLUDES)
-	@cp -v `ls *.hpp --ignore=$(INCFILE)` $(INCSDIR)
+	@cp -v `ls src/*.hpp` $(INCSDIR)
 	@cp -v $(PCFILE) $(PCDIR)
 
 uninstall : $(LIBS)
@@ -47,22 +37,19 @@ mr-proper : uninstall clean
 
 reinstall : uninstall rec install
 
+clean-all : clean
+	cd tools && make clean
+
 install-all : install
-	@echo "*** EDITOR ***"
-	cd editor && make install
-	@echo "*** CREATOR ***"
-	cd creator && make install
+	@echo -e "\t***** TOOLS *****"
+	cd tools && make install
 
 uninstall-all : uninstall
-	@echo "*** EDITOR ***"
-	cd editor && make uninstall
-	@echo "*** CREATOR ***"
-	cd creator && make uninstall
+	@echo -e "\t***** TOOLS *****"
+	cd tools && make uninstall
 
 reinstall-all : reinstall
-	@echo "*** EDITOR ***"
-	cd editor && make reinstall
-	@echo "*** CREATOR ***"
-	cd creator && make reinstall
+	@echo -e "\t***** TOOLS *****"
+	cd tools && make reinstall
 
 

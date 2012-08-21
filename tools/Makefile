@@ -1,11 +1,11 @@
-creator :
+all :
+	cd editor && make
 	cd creator && make
 
 editor :
 	cd editor && make
 
-all :
-	cd editor && make
+creator :
 	cd creator && make
 
 clean :
@@ -23,5 +23,7 @@ uninstall :
 reinstall :
 	cd editor && make reinstall
 	cd creator && make reinstall
+
+.PHONY: all editor creator clean install uninstall reinstall
 
 

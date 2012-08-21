@@ -34,4 +34,6 @@ uninstall :
 
 reinstall : uninstall rec install
 
+.PHONY: reinstall uninstall install rec clean all
+
 

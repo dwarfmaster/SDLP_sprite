@@ -1,3 +1,9 @@
+
+/*!
+ * \file anim.cpp
+ * \brief Implémente la classe sdl::Anim.
+ */
+
 #include "anim.hpp"
 
 namespace sdl
@@ -520,6 +526,10 @@ namespace sdl
 		return sdl::AABB( makeRect(0, 0, wl+wr, hl+hr) );
 	}
 
+	/*!
+	 * \struct sdl::ParsedFrame
+	 * \brief Structure inaccessible pour l'utilisateur servant au chargement du fichier d'animation.
+	 */
 	struct ParsedFrame // Utilisée uniquement lors du chargement des sprites
 	{
 		ParsedFrame() : id(""), surf(NULL), elem(NULL), sprite(NULL)

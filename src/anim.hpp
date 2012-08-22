@@ -1,3 +1,9 @@
+
+/*!
+ * \file anim.hpp
+ * \brief Définit la classe sdl::Anim.
+ */
+
 #ifndef DEF_SDLP_ANIM
 #define DEF_SDLP_ANIM
 
@@ -79,26 +85,26 @@ namespace sdl
 			sdl::AABB getMaxSizeFloat() const; // Retourne tout l'espace qui pourra être occupé avec un hotpoint fixe
 
 		protected:
-			Uint32 m_lastTime; // Le temps lors du dernier appel à update
-			size_t m_act; // L'id de l'actuel
-			bool m_pause;
-			Uint32 m_timeStay; // Temps restant avant le changement
-			float m_speed; // Multiplier de vitesse
+			Uint32 m_lastTime; /*!< Le temps retouné par SDL_GetTicks lors du dernier appel à update. */
+			size_t m_act; /*!< L'id de la frame actuelle. */
+			bool m_pause; /*!< Indique si l'anim est en pause. */
+			Uint32 m_timeStay; /*!< Temps restant avant le changement de frame. */
+			float m_speed; /*!< Le facteur de vitesse. */
 
 			struct frame
 			{
-				std::string name;
-				ASprite* sprite;
-				bool toFree;
-				Uint32 time; // Durée de la frame
+				std::string name; /*!< Le nom de la frame. */
+				ASprite* sprite; /*!< La sdl::ASprite de la frame. */
+				bool toFree; /*!< S'il faudra libérer la sdl::ASprite de la frame. */
+				Uint32 time; /*!< La durée de la frame. */
 
-				std::string path; // Utilisé uniquement pour la sauvegarde
-				std::string id; // Idem
-				AABB rect; // Idem
+				std::string path; /*!< Le chemin de l'image originale ou du fichier sprite, utilisé uniquement pour la sauvegarde. */
+				std::string id; /*!< L'id de la sprite dans le fichier. S'il est vide, on chargera path comme une image. Est utilisé uniquement pour la sauvegarde. */
+				AABB rect; /*!< La portion occupée par le sprite dans l'image originale. N'est utilisé que pour la suavegarde et si l'id est vide. */
 			};
-			std::vector<frame> m_frames; // Il peut y avoir un ajout au milieu, mais l'accès rapide est plus important
-			bool m_loaded;
-			Uint32 m_default; // Time
+			std::vector<frame> m_frames; /*!< La liste de frames. */
+			bool m_loaded; /*!< Si l'anim est chargée. */
+			Uint32 m_default; /*!< Le temps par défaut. */
 
 			void parseSprites(std::vector<frame>* sprites, TiXmlElement* elem, path_t basepath);
 

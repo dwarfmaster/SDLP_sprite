@@ -66,7 +66,7 @@ namespace sdl
 			operator bool() const; // idem
 			bool operator!() const; // idem
 
-		private:
+		protected:
 			ASprite m_edit;
 
 			std::string m_current; // GAABB actuel

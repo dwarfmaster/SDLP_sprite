@@ -69,7 +69,7 @@ namespace sdl
 			// Les groupes du premiers qui sont en colision avec le second
 			std::vector< std::pair<std::string, std::string> > colision(Pointsi pos1, const ASprite& other, Pointsi pos2) const;
 
-		private:
+		protected:
 			struct GAABB // Groupe de SAABB
 			{
 				AABB global; /*!< AABB englobant les sous AABBs. */

@@ -1,3 +1,9 @@
+
+/*!
+ * \file spritefile.cpp
+ * \brief Implémente la classe sdl::SpriteFile.
+ */
+
 #include "spritefile.hpp"
 
 namespace sdl
@@ -336,7 +342,14 @@ namespace sdl
 		return save(m_path);
 	}
 
-	std::string& operator<<(std::string& str, const std::string& add) // Fonction servant uniquement à faciliter l'écriture de la suivante
+	/*!
+	 * \fn std::string& sdl::operator<<(std::string& str, const std::string& add)
+	 * \brief Fonction inaccessible à l'utilisateur. Utilisée uniquement pour faciliter l'écriture de la fonction sdl::SpriteFile::xmlSprite.
+	 * \param str La chaine à laquelle on ajoute d un autre chaine.
+	 * \param add La chaine à ajouter.
+	 * \return Un référence sur la chaine str.
+	 */
+	std::string& operator<<(std::string& str, const std::string& add)
 	{
 		str += add;
 		return str;

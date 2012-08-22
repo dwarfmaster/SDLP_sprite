@@ -1,3 +1,9 @@
+
+/*!
+ * \file spritefile.hpp
+ * \brief Définit la classe sdl::SpriteFile.
+ */
+
 #ifndef DEF_SDLP_SPRITEFILE
 #define DEF_SDLP_SPRITEFILE
 
@@ -56,18 +62,18 @@ namespace sdl
 			static ASprite* spriteXml(TiXmlElement* sprite, SDL_Surface* img, AABB* arect = NULL); // La surface ne sera pas modifiée
 
 		private:
-			path_t m_path; // Chemin enregistré
-			path_t m_imgPath; // Chemin de l'image
-			boost::shared_ptr<SDL_Surface> m_img;
+			path_t m_path; /*!< Le chemin du fichier chargé. */
+			path_t m_imgPath; /*!< Le chemin de l'image. */
+			boost::shared_ptr<SDL_Surface> m_img; /*!< L'image utilisée. */
 
 			struct sprite
 			{
-				AABB rect;
-				Pointsi hotp;
+				AABB rect; /*!< La partie de l'image à utiliser. */
+				Pointsi hotp; /*!< Le point chaud. */
 
-				std::map<std::string, gaabb> gaabbs;
+				std::map<std::string, gaabb> gaabbs; /*!< Le groupes de sous AABBs. */
 			};
-			std::map<std::string, sprite> m_sprites;
+			std::map<std::string, sprite> m_sprites; /*!< Le sprites. */
 
 			static bool parseSprite(TiXmlElement* spriten, sprite* p, const SDL_Surface* img); // Ces trois fonctions peuvent être utlisées par spriteXml
 			static void parseRect(TiXmlElement* spriten, AABB* p, const SDL_Surface* img);

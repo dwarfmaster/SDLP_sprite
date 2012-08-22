@@ -1,3 +1,9 @@
+
+/*!
+ * \file asprite.hpp
+ * \brief Définit la classe ASprite.
+ */
+
 #ifndef DEF_SDLP_ASPRITE
 #define DEF_SDLP_ASPRITE
 
@@ -18,8 +24,8 @@ namespace sdl
 {
 	struct gaabb
 	{
-		std::vector<sdl::AABB> saabbs;
-		unsigned int priority;
+		std::vector<sdl::AABB> saabbs; /*!< Liste des sous AABBs. */
+		unsigned int priority; /*!< Priorité du groupe. */
 	};
 
 	class SpriteEditor;
@@ -66,19 +72,19 @@ namespace sdl
 		private:
 			struct GAABB // Groupe de SAABB
 			{
-				AABB global;
-				std::vector<AABB> aabbs;
-				unsigned int priority; // 0 = max level
+				AABB global; /*!< AABB englobant les sous AABBs. */
+				std::vector<AABB> aabbs; /*!< Les sous AABBs. */
+				unsigned int priority; /*!< La priorité, telle que 0 soit le niveau maximum. */
 			};
-			std::map<std::string, GAABB> m_groups;
+			std::map<std::string, GAABB> m_groups; /*!< Les groupes d'AABBs. */
 			typedef std::map<std::string,GAABB>::iterator group_iterator;
 			typedef std::map<std::string,GAABB>::const_iterator c_group_iterator;
 
-			AABB m_global;
+			AABB m_global; /*!< L'AABB englobant tous les groupes. */
 
-			Pointsi m_hotPoint;
+			Pointsi m_hotPoint; /*!< Le point chaud (de blit) du sprite. */
 
-			boost::shared_ptr<SDL_Surface> m_img;
+			boost::shared_ptr<SDL_Surface> m_img; /*!< L'image à blitter. */
 
 			GAABB fromGaabb(const gaabb& cp);
 	};

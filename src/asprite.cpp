@@ -1,3 +1,9 @@
+
+/*!
+ * \file asprite.cpp
+ * \brief Implémente la classe ASprite.
+ */
+
 #include "asprite.hpp"
 
 namespace sdl

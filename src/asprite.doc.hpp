@@ -20,7 +20,7 @@
  * \class sdl::ASprite
  * \brief Stocke et manipule une image avec des informations de colision et de blit.
  *
- * Pour en charger une, voir la classe sdl::SpriteFile, et pour en modifier une, voir la classe sdl::SrptieEditor.
+ * Pour en charger une, voir la classe sdl::SpriteFile, et pour en modifier une, voir la classe sdl::SpriteEditor.
  */
 
 /*!

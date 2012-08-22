@@ -1,3 +1,9 @@
+
+/*!
+ * \file spriteedit.hpp
+ * \brief Définit la classe sdl::SpriteEditor.
+ */
+
 #ifndef DEF_SDLP_SPRITEEDIT
 #define DEF_SDLP_SPRITEEDIT
 
@@ -67,13 +73,13 @@ namespace sdl
 			bool operator!() const; // idem
 
 		protected:
-			ASprite m_edit;
+			ASprite m_edit; /*!< Contient une version temporaire du sprite en édition. */
 
-			std::string m_current; // GAABB actuel
-			size_t m_idxCur; // SAABB actuel
+			std::string m_current; /*!< Indique le groupe de sous AABBs en édition. */
+			size_t m_idxCur; /*!< Indique la sous AABB en édition. */
 
-			SpriteFile* m_file;
-			std::string m_id;
+			SpriteFile* m_file; /*!< Le sdl::SpriteFile contenant la sdl::ASprite en édition. */
+			std::string m_id; /*!< Le nom de la sdl::ASprite en édition. */
 	};
 };
 

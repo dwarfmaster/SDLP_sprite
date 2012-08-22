@@ -254,6 +254,10 @@ namespace sdl
 			return false;
 
 		size_t id = idFromName(frame);
+
+		if( m_frames[id].toFree )
+			delete m_frames[id].sprite;
+
 		m_frames[id].sprite = nsprite;
 		m_frames[id].toFree = tofree;
 
@@ -324,6 +328,8 @@ namespace sdl
 		{
 			if(it->name == name)
 			{
+				if( it->toFree )
+					delete it->sprite;
 				m_frames.erase(it);
 				return true;
 			}

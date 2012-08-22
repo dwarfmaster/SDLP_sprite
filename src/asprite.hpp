@@ -1,7 +1,7 @@
 
 /*!
  * \file asprite.hpp
- * \brief Définit la classe ASprite.
+ * \brief Définit la classe sdl::ASprite.
  */
 
 #ifndef DEF_SDLP_ASPRITE

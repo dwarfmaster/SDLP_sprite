@@ -1,7 +1,7 @@
 
 /*!
  * \file asprite.cpp
- * \brief Implémente la classe ASprite.
+ * \brief Implémente la classe sdl::ASprite.
  */
 
 #include "asprite.hpp"

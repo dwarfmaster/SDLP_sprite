@@ -1,7 +1,7 @@
 
 /*!
  * \file asprite.doc.hpp
- * \brief Contient la doc de la classe ASprite.
+ * \brief Contient la doc de la classe sdl::ASprite.
  */
 
 /*!

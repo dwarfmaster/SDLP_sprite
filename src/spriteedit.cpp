@@ -1,8 +1,9 @@
 
 /*!
- * \file spriteedit.hpp
+ * \file spriteedit.cpp
  * \brief Implémente la classe sdl::SpriteEditor.
  */
+
 #include "spriteedit.hpp"
 
 namespace sdl

@@ -1,0 +1,14 @@
+# .gitignore
+
+# compiled objects
+*.o
+*.so
+tools/creator/spriteCreator
+tools/editor/spriteEditor
+
+# Ressources
+*.xml
+*.png
+*test*
+
+

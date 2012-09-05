@@ -1,7 +1,7 @@
 include param.mk
 
 DEST=/home/luc/libs
-VERSION=1.0
+VERSION=beta1
 
 INCLUDES=/home/luc/includes
 INCFILE=$(NAME).hpp

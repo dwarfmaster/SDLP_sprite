@@ -5,7 +5,7 @@ includedir=${prefix}/includes
 
 Name: SDLP_sprite
 Description: Sprite end animation library for Simple DirectMedia Layer
-Version: 0.1
+Version: beta1
 Requires: sdl >= 1.2.10 SDLP_position >= 1.0 SDLP_tools >= 0.1 SDL_image >= 1.2
 Libs: -L${libdir} -lSDLP_sprite -ltinyxml -lboost_system -lboost_filesystem
 Cflags: -I${includedir} -std=gnu++0x
